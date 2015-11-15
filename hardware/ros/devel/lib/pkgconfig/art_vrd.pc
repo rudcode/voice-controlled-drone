@@ -1,0 +1,8 @@
+prefix=/home/aldwinakbar/Dropbox/Projects/campus/team/voice-controlled-drone/hardware/ros/devel
+
+Name: art_vrd
+Description: Description of art_vrd
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/aldwinakbar/Dropbox/Projects/campus/team/voice-controlled-drone/hardware/ros/devel/lib 
+Requires: 

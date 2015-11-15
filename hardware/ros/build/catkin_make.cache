@@ -1,0 +1,2 @@
+art_vrd
+-DCATKIN_DEVEL_PREFIX=/home/aldwinakbar/Dropbox/Projects/campus/team/voice-controlled-drone/hardware/ros/devel -DCMAKE_INSTALL_PREFIX=/home/aldwinakbar/Dropbox/Projects/campus/team/voice-controlled-drone/hardware/ros/install -G Unix Makefiles
