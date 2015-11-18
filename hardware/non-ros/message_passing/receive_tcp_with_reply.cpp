@@ -13,7 +13,7 @@ int main(int argc , char *argv[])
     int socket_desc , client_sock , c , read_size;
     struct sockaddr_in server , client;
     char client_message[2000];
-    int port_number = 8899;
+    int port_number = 50005;
      
     socket_desc = socket(AF_INET , SOCK_STREAM , 0);
     if (socket_desc == -1){

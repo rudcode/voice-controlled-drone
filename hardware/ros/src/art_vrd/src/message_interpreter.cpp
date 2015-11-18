@@ -43,6 +43,7 @@ void mainVDInterpreter(const std_msgs::String& vData){
 	voiceData = vData.data;
 	//const char *castedVD = voiceData.c_str();
 	//filteredVD = strstr(castedVD,"climb");
+	
 	ROS_INFO_STREAM( "Voice Data : " << voiceData) ;
 }
 
