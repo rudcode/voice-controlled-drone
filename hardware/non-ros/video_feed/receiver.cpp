@@ -1,24 +1,37 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#include <termios.h>
 #include <sys/time.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h> 
-#include <iostream>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <iostream>
+#include <fstream>
+#include <vector>
 
 using namespace std;
 using namespace cv;
  
 int main(int argc , char *argv[])
 {
-	char buffer[100000];
-	Mat img_stream;
+	// ############ Start OpenCV Variable ############ 
+	int nBytes,x;
+    char video_data[100000];
+    vector<uchar> buff;
+    vector<int> param = vector<int>(2);      
+	Mat image_capture;  
+    param[0] = CV_IMWRITE_JPEG_QUALITY;			// set tipe encoding 
+	param[1] =90;								// set kualitas encoding
+	// ############ End OpenCV Variable ############ 
 	
+	// ############  Start Create Socket  ############ 
     int socket_desc , client_sock , c , read_size;
     struct sockaddr_in server , client;
     char client_message[2000];
@@ -28,7 +41,6 @@ int main(int argc , char *argv[])
     if (socket_desc == -1){
         printf("Could not create socket");
     }
-	
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(port_number);
@@ -38,6 +50,20 @@ int main(int argc , char *argv[])
     }   
     listen(socket_desc , 3);
     
+    // ############  End Create Socket  ############ 
+    
+    
+    // ############  Start Video Init ############   
+    VideoCapture cap(0);			// Membuka Kamera
+	cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);		// Set Lebar gambar
+	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 360);		// Set tinggi Gambar
+	if(!cap.isOpened()){
+		cout << "Error\n";
+		return -1;
+	}
+	// ############  End Video Init ############  
+
+    // Keep waiting for connection
 	while(1){
 		puts("Waiting for incoming connections...");
 		c = sizeof(struct sockaddr_in);
@@ -48,23 +74,38 @@ int main(int argc , char *argv[])
 			return 1;
 		}
 		puts("Connection accepted");
-		  namedWindow("Server Streamer", WINDOW_NORMAL); 
-
-		while( (read_size = recv(client_sock , client_message , 100000 , 0)) > 0 ){
-			cout << read_size << " Bytes Received" << endl;
+		 
+		// ############  Start Receiving Data ############ //
+		while( (read_size = recv(client_sock , client_message , 2000 , 0)) > 0 ){
 			
-			Mat img_buff(Size(640, 360), CV_8U, client_message);				// deklarasi tempat untuk frame gambar
-			img_stream = imdecode(img_buff, CV_LOAD_IMAGE_COLOR);		// men decode image data yang diterima
-			if (!img_stream.empty()){
-				imshow("Server Streamer", img_stream);					// menampilkan gambar
-			}
-			
-			if (waitKey(30) == 27){
-				cout << "esc key is pressed by user" << endl;
-				break; 
-			}
+			//Send the message back to client
+			if(client_message[0] == 'v' && client_message[1] == 'f'){
+				cap >> image_capture;									// mengambil gambar dari kamera
+				cvtColor(image_capture, image_capture, CV_8U);
+					
+				imencode(".jpeg",image_capture, buff,param);			// meng-encode gambar
+					  
+				for (x = 0; x < buff.size(); x++){						// merubah data gambar dari tipe vector ke array
+					video_data[x] = buff[x];
+				}
 				
+				nBytes = buff.size();
+				
+				if(send(client_sock , video_data , nBytes , 0) < 0){	// send encoded image to client
+					puts("Send failed");
+					return 1;
+				}
+			
+				cout << buff.size() << " Bytes Sent" <<endl;
+				memset(&video_data[0], 0, nBytes);						// men-clear buffer gambar
+			}
+			
+			else
+			send(client_sock , "ERROR\0" , 7,0);						// if client_message not vf (video fetch)
+			
 		}
+		
+		// ############  End Receiving Data ############ //
 		 
 		if(read_size == 0){
 			puts("Client disconnected");
