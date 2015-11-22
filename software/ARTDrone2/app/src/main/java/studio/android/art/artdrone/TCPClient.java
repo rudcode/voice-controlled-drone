@@ -107,17 +107,13 @@ public class TCPClient {
                         mServerMessage = "";
                         mServerMessage = mBufferIn.readLine();
                         int len = Integer.parseInt(mServerMessage);
-
                         if (len > 0) {
                             byte[] data = new byte[len];
-                            int n = 0;
 
-                            //while (len != 0) {
-                                Log.e("Debug2", len + " " + n);
-                                mDataInputStream.readFully(data, n, len);
-                                //len = len - n;
-                            //}
-                            while (mMessageListener == null) ;
+                            Log.e("Debug2", len + "");
+                            mDataInputStream.readFully(data, 0, len);
+
+                            while (mMessageListener == null);
                             if (mMessageListener != null) {
                                 //call the method messageReceived from MyActivity class
                                 mMessageListener.messageReceived(data);
@@ -130,12 +126,10 @@ public class TCPClient {
                     }
 
                 }
-                Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
+                //Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
 
             } catch (Exception e) {
-
                 Log.e("TCP", "S: Error", e);
-
             } finally {
                 //the socket must be closed. It is not possible to reconnect to this socket
                 // after it is closed, which means a new socket instance has to be created.
