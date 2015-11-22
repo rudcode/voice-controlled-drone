@@ -127,9 +127,10 @@ public class MainActivity extends AppCompatActivity {
             if (bitmap != null) {
                 cameraDrone.setImageBitmap(bitmap);
             }
-            else if (Objects.equals(values[0].toString(), "ERROR")) {
+            else if (Objects.equals(new String(values[0]), "ERROR")) {
                 receivedTextView.setText("ERROR");
             }
+            //receivedTextView.setText(new String(values[0]));
         }
     }
 
