@@ -134,7 +134,6 @@ include_directories(
 
 ## Declare a C++ executable
 # add_executable(art_vrd_node src/art_vrd_node.cpp)
- add_executable(message_interpreter src/message_interpreter.cpp)
  add_executable(status src/status.cpp)
  add_executable(tcp_bridge src/tcp_bridge.cpp)
  add_executable(camera_feed src/camera_feed.cpp)
@@ -149,10 +148,6 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
- 
- target_link_libraries(message_interpreter
-   ${catkin_LIBRARIES}
- )
  
  target_link_libraries(status
    ${catkin_LIBRARIES}
