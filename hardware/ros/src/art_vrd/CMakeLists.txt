@@ -136,7 +136,8 @@ include_directories(
 # add_executable(art_vrd_node src/art_vrd_node.cpp)
  add_executable(message_interpreter src/message_interpreter.cpp)
  add_executable(status src/status.cpp)
- add_executable(data_tcp_receiver src/data_tcp_receiver.cpp)
+ add_executable(tcp_bridge src/tcp_bridge.cpp)
+ add_executable(camera_feed src/camera_feed.cpp)
  
 
 ## Add cmake target dependencies of the executable
@@ -157,8 +158,13 @@ include_directories(
    ${catkin_LIBRARIES}
  )
  
- target_link_libraries(data_tcp_receiver
+ target_link_libraries(tcp_bridge
    ${catkin_LIBRARIES}
+ )
+ 
+ target_link_libraries(camera_feed
+   ${catkin_LIBRARIES}
+   ${OpenCV_LIBRARIES} 
  )
 
  

@@ -1,7 +1,0 @@
-set(_CATKIN_CURRENT_PACKAGE "art_vrd")
-set(art_vrd_MAINTAINER "aldwinakbar <aldwin@hermanudin.com>")
-set(art_vrd_DEPRECATED "")
-set(art_vrd_VERSION "0.0.0")
-set(art_vrd_BUILD_DEPENDS "cv_bridge" "geometry_msgs" "image_transport" "roscpp" "rospy" "sensor_msgs" "std_msgs" "visualization_msgs" "mavros")
-set(art_vrd_RUN_DEPENDS "cv_bridge" "geometry_msgs" "image_transport" "roscpp" "rospy" "sensor_msgs" "std_msgs" "visualization_msgs" "mavros")
-set(art_vrd_BUILDTOOL_DEPENDS "catkin")

@@ -15,6 +15,22 @@
 #include <stdio.h>
 #include <unistd.h>
 
+/*
+ * Find Command such as
+ * 
+ * Climb 5 meter
+ * Drop 5 meter
+ * go forward 10 meter
+ * go backward 10 meter
+ * go left 10 meter
+ * go right 10 meter
+ * circle 10 meter
+ * return to home
+ * land here
+ * fly now
+ * 
+ * */
+
 void pidXReceiver(const pid::controller_msg& x_msg);
 void pidYReceiver(const pid::controller_msg& y_msg);
 void cvReceiver(const geometry_msgs::Point& cv_msg); 
