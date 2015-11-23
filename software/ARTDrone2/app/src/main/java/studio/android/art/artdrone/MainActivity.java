@@ -168,15 +168,17 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(byte[]... values) {
             super.onProgressUpdate(values);
             //receivedTextView.setText(values[0].length + "");
-            bitmapCameraDrone = null;
             if (Objects.equals(new String(values[1]), "I")) {
                 bitmapCameraDrone = BitmapFactory.decodeByteArray(values[0], 0, values[0].length);
+                if (bitmapCameraDrone != null) {
+                    cameraDrone.setImageBitmap(bitmapCameraDrone);
+                    bitmapCameraDrone = null;
+                }
             }
-            if (bitmapCameraDrone != null) {
-                cameraDrone.setImageBitmap(bitmapCameraDrone);
-            }
-            else if (Objects.equals(new String(values[0]), "ERROR")) {
-                receivedTextView.setText("ERROR");
+            else if (Objects.equals(new String(values[1]), "S") && values[0].length >= 2) {
+                if ((values[0][0] == (byte)'s' && values[0][1] == (byte)'c') || (values[0][0] == (byte)'d' && values[0][1] == (byte)'s')) {
+                    receivedTextView.setText(new String(values[0]));
+                }
             }
         }
     }
