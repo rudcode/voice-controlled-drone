@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     String voiceCommand;
 
     ConnectTask connectTCP = null;
-    TCPClient tcpClient;
+    TCPClient tcpClient = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
             tcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
 
                 @Override
-                public void messageReceived(byte[] message) {
-                    publishProgress(message);
+                public void messageReceived(byte[] message, byte[] isImage) {
+                    publishProgress(message, isImage);
                 }
             }, ipAddressEditText.getText().toString(), Integer.parseInt(portAddressEditText.getText().toString()));
             tcpClient.run();
@@ -169,7 +169,9 @@ public class MainActivity extends AppCompatActivity {
             super.onProgressUpdate(values);
             //receivedTextView.setText(values[0].length + "");
             bitmapCameraDrone = null;
-            bitmapCameraDrone = BitmapFactory.decodeByteArray(values[0], 0, values[0].length);
+            if (Objects.equals(new String(values[1]), "I")) {
+                bitmapCameraDrone = BitmapFactory.decodeByteArray(values[0], 0, values[0].length);
+            }
             if (bitmapCameraDrone != null) {
                 cameraDrone.setImageBitmap(bitmapCameraDrone);
             }

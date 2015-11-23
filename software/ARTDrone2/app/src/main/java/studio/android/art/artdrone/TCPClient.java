@@ -99,6 +99,10 @@ public class TCPClient {
                 InputStream mInputStream = socket.getInputStream();
                 DataInputStream mDataInputStream = new DataInputStream(mInputStream);
                 mBufferIn = new BufferedReader(new InputStreamReader(mInputStream));
+                byte[] data;
+                int len;
+                byte[] isImage = "I".getBytes();
+                byte[] isString = "S".getBytes();
 
                 while (mRun) {
                     mServerMessage = mBufferIn.readLine();
@@ -106,23 +110,22 @@ public class TCPClient {
                     if (Objects.equals(mServerMessage, "*AI")) {
                         mServerMessage = "";
                         mServerMessage = mBufferIn.readLine();
-                        int len = Integer.parseInt(mServerMessage);
+                        len = Integer.parseInt(mServerMessage);
                         if (len > 0) {
-                            byte[] data = new byte[len];
+                            data = new byte[len];
 
                             Log.e("Debug2", len + "");
                             mDataInputStream.readFully(data, 0, len);
 
-                            while (mMessageListener == null);
                             if (mMessageListener != null) {
                                 //call the method messageReceived from MyActivity class
-                                mMessageListener.messageReceived(data);
+                                mMessageListener.messageReceived(data, isImage);
                             }
                         }
                     }
                     else if (mServerMessage != null && mMessageListener != null) {
                         //call the method messageReceived from MyActivity class
-                        mMessageListener.messageReceived(mServerMessage.getBytes());
+                        mMessageListener.messageReceived(mServerMessage.getBytes(), isString);
                     }
 
                 }
@@ -147,6 +150,6 @@ public class TCPClient {
     //Declare the interface. The method messageReceived(String message) will must be implemented in the MyActivity
     //class at on asynckTask doInBackground
     public interface OnMessageReceived {
-        public void messageReceived(byte[] message);
+        public void messageReceived(byte[] message, byte[] type);
     }
 }
