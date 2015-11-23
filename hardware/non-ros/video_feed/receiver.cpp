@@ -110,16 +110,18 @@ int main(int argc , char *argv[])
 				//usleep(50000);
 			}
 			else if(client_message[0] == 's' && client_message[1] == 'c'){
-				if(send(client_sock, "sc:OK\n", sizeof("OK\n")-1, 0) < 0) {	// send ok
+				if(send(client_sock, "sc:OK\n", sizeof("sc:OK\n")-1, 0) < 0) {	// send ok
 					cout << "Send ok failed" << endl;
 					return 1;
 				}
+				cout << "sc:OK" <<endl;
 			}
 			else if(client_message[0] == 'd' && client_message[1] == 's'){
-				if(send(client_sock, "ds:Drone Status\n", sizeof("Drone Status\n")-1, 0) < 0) {	// send Drone Status
+				if(send(client_sock, "ds:Drone Status\n", sizeof("ds:Drone Status\n")-1, 0) < 0) {	// send Drone Status
 					cout << "Send ok failed" << endl;
 					return 1;
 				}
+				cout << "ds:Drone Status" <<endl;
 			}
 			else {
 				send(client_sock, "ERROR\n", 6, 0);			// if client_message not vf (video fetch)
