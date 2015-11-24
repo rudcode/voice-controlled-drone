@@ -59,7 +59,7 @@ int main(int argc, char **argv){
 	
 	ros::init(argc, argv, "camera_feed");
 	ros::NodeHandle n;
-	ros::Subscriber vd_sub = n.subscribe("art_vrd/voice_data", 10, mainCameraFeed);
+	ros::Subscriber sub_vd = n.subscribe("art_vrd/voice_data", 10, mainCameraFeed);
 	pub_incoming_reply = n.advertise<std_msgs::String>("art_vrd/incoming_reply", 100);
 	ROS_INFO("Starting Camera Feed.");
 	ros::spin();
