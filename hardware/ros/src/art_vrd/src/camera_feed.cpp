@@ -29,7 +29,7 @@
 using namespace std;
 using namespace cv;
 
-void mainCameraFeed(const std_msgs::String& str);
+void mainCameraFeed(const std_msgs::String& vData);
 ros::Publisher pub_incoming_reply;
 
 // ############ Start OpenCV Variable ############ 
