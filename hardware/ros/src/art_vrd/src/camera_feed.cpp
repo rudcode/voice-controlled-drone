@@ -10,22 +10,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
-/*
- * Find Command such as
- * 
- * Climb 5 meter
- * Drop 5 meter
- * go forward 10 meter
- * go backward 10 meter
- * go left 10 meter
- * go right 10 meter
- * circle 10 meter
- * return to home
- * land here
- * fly now
- * 
- * */
+ 
 using namespace std;
 using namespace cv;
 
@@ -76,7 +61,7 @@ void mainCameraFeed(const std_msgs::String& vData){
 		cvtColor(image_capture, image_capture, CV_8U);
 					
 		imencode(".jpeg",image_capture, buff,param);			// meng-encode gambar
-					  
+		
 		for (x = 0; x < buff.size(); x++){						// merubah data gambar dari tipe vector ke array
 			video_data[x] = buff[x];
 		}
