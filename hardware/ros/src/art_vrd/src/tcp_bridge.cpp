@@ -13,6 +13,7 @@
 
 
 std::string incoming_reply;
+int incoming_reply_size;
 void incomingReply(const std_msgs::String& data_reply);
 
 int main(int argc, char **argv){
@@ -30,7 +31,7 @@ int main(int argc, char **argv){
     int socket_desc , client_sock , c , read_size;
     struct sockaddr_in server , client;
     char client_message[512];
-    int port_number = 4444;
+    int port_number = 54321;
      
     socket_desc = socket(AF_INET , SOCK_STREAM , 0);
     if (socket_desc == -1){
@@ -74,8 +75,21 @@ int main(int argc, char **argv){
 			puts("Reply accepted");
 			
 			message_reply = incoming_reply.c_str();
-			send(client_sock , message_reply , strlen(message_reply) , 0);
+			incoming_reply_size = incoming_reply.size();
 			
+			// ################## VF Command Reply Header Data ########################
+			if(client_message[0] == 'v' && client_message[1] == 'f'){
+				
+				char byteBuffer[20];
+				sprintf(byteBuffer, "\n*AI\n%d\n", incoming_reply_size);
+				if(send(client_sock, byteBuffer, sizeof(byteBuffer), 0) < 0) {
+					return 1;
+				}
+			}	
+			// ################## VF Command Reply Header Data ########################
+			
+			send(client_sock , message_reply , incoming_reply_size , 0);
+		
 			incoming_reply = "NULL";
 			
 			if(read_size == 0){
@@ -91,7 +105,7 @@ int main(int argc, char **argv){
 		}
 		close(client_sock);
         sleep(1);
-	}
+	}	
 	close(socket_desc);
      
     return 0;
