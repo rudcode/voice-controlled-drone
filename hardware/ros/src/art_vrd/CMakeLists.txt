@@ -162,6 +162,12 @@ include_directories(
    ${OpenCV_LIBRARIES} 
  )
 
+
+############## Example ################
+# add_executable(subscriber src/example/subscriber.cpp)
+# target_link_libraries(subscriber
+#   ${catkin_LIBRARIES}
+# )
  
 ## Test Node cpp executable
 
