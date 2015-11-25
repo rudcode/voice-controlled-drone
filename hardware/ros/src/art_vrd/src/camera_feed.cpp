@@ -77,4 +77,3 @@ void mainCameraFeed(const std_msgs::String& vData){
 	}	
 	ROS_INFO_STREAM( "Voice Data : " << vData.data) ;
 }
-
