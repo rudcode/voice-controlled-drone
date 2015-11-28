@@ -1,31 +1,30 @@
 package studio.android.art.artdrone3;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+
+import java.util.Objects;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     // Declaring Your View and Variables
-
     Toolbar toolbar;
-    ViewPager pager;
+    public static ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
     CharSequence Titles[]={"Speech","Video","Status"};
-    int Numboftabs =3;
+    int Numboftabs = 3;
+
+    public static ConnectTask connectTCP = null;
+    public static TCPClient tcpClient = null;
+    static Bitmap bitmapCameraDrone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MainActivity extends ActionBarActivity {
 
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -61,9 +60,39 @@ public class MainActivity extends ActionBarActivity {
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
 
-
-
     }
 
+    public static class ConnectTask extends AsyncTask<String, byte[], TCPClient> {
+        @Override
+        protected TCPClient doInBackground(String... message) {
+
+            tcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
+
+                @Override
+                public void messageReceived(byte[] message, byte[] isImage) {
+                    publishProgress(message, isImage);
+                }
+            }, Tab1.ipAddressEditText.getText().toString(), Integer.parseInt(Tab1.portAddressEditText.getText().toString()));
+            tcpClient.run();
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(byte[]... values) {
+            super.onProgressUpdate(values);
+            //receivedTextView.setText(values[0].length + "");
+            if (Objects.equals(new String(values[1]), "I")) {
+                bitmapCameraDrone = BitmapFactory.decodeByteArray(values[0], 0, values[0].length);
+                if (bitmapCameraDrone != null) {
+                    Tab2.cameraDrone.setImageBitmap(bitmapCameraDrone);
+                    bitmapCameraDrone = null;
+                }
+            }
+            if (Objects.equals(new String(values[1]), "S") && values[0].length >= 2) {
+                if ((values[0][0] == (byte)'s' && values[0][1] == (byte)'c') || (values[0][0] == (byte)'d' && values[0][1] == (byte)'s')) {
+                    Tab1.receivedTextView.setText(new String(values[0]));
+                }
+            }
+        }
+    }
 
 }

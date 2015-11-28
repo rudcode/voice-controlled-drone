@@ -16,10 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.AsyncTask;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Created by hp1 on 21-01-2015.
@@ -27,9 +25,9 @@ import java.util.Objects;
 public class Tab1 extends Fragment {
     Button speakButton;
     TextView commandTextView;
-    TextView receivedTextView;
-    EditText ipAddressEditText;
-    EditText portAddressEditText;
+    public static TextView receivedTextView;
+    public static EditText ipAddressEditText;
+    public static EditText portAddressEditText;
     EditText languageEditText;
     EditText commandEdit;
     Button sendCommandButton;
@@ -37,8 +35,6 @@ public class Tab1 extends Fragment {
     Button stopButton;
     String voiceCommand;
 
-    ConnectTask connectTCP = null;
-    TCPClient tcpClient = null;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.tab_1,container,false);
@@ -83,8 +79,8 @@ public class Tab1 extends Fragment {
                 String commandEditString = commandEdit.getText().toString();
                 commandTextView.setText(commandEditString);
                 receivedTextView.setText("");
-                if(tcpClient != null) {
-                    tcpClient.sendMessage(commandEditString);
+                if(MainActivity.tcpClient != null) {
+                    MainActivity.tcpClient.sendMessage(commandEditString);
                 }
                 else {
                     receivedTextView.setText("Not connected");
@@ -95,14 +91,14 @@ public class Tab1 extends Fragment {
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tcpClient != null) {
-                    tcpClient.stopClient();
-                    tcpClient = null;
-                    connectTCP = null;
+                if(MainActivity.tcpClient != null) {
+                    MainActivity.tcpClient.stopClient();
+                    MainActivity.tcpClient = null;
+                    MainActivity.connectTCP = null;
                 }
-                if (connectTCP == null) {
-                    connectTCP = new ConnectTask();
-                    connectTCP.execute("");
+                if (MainActivity.connectTCP == null) {
+                    MainActivity.connectTCP = new MainActivity.ConnectTask();
+                    MainActivity.connectTCP.execute("");
                 }
             }
         });
@@ -110,10 +106,10 @@ public class Tab1 extends Fragment {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(tcpClient != null) {
-                    tcpClient.stopClient();
-                    tcpClient = null;
-                    connectTCP = null;
+                if(MainActivity.tcpClient != null) {
+                    MainActivity.tcpClient.stopClient();
+                    MainActivity.tcpClient = null;
+                    MainActivity.connectTCP = null;
                 }
             }
         });
@@ -134,8 +130,8 @@ public class Tab1 extends Fragment {
                     voiceCommand = text.get(0);
                     commandTextView.setText(voiceCommand);
 
-                    if(tcpClient != null) {
-                        tcpClient.sendMessage("sc" + voiceCommand);
+                    if(MainActivity.tcpClient != null) {
+                        MainActivity.tcpClient.sendMessage("sc" + voiceCommand);
                     }
                     else {
                         receivedTextView.setText("Not connected");
@@ -146,19 +142,5 @@ public class Tab1 extends Fragment {
             }
         }
     }
-    public class ConnectTask extends AsyncTask<String, byte[], TCPClient> {
-        @Override
-        protected TCPClient doInBackground(String... message) {
 
-            tcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
-
-                @Override
-                public void messageReceived(byte[] message, byte[] isImage) {
-                    publishProgress(message, isImage);
-                }
-            }, ipAddressEditText.getText().toString(), Integer.parseInt(portAddressEditText.getText().toString()));
-            tcpClient.run();
-            return null;
-        }
-    }
 }
