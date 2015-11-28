@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * Created by hp1 on 21-01-2015.
  */
 public class Tab1 extends Fragment {
-    Button speakButton;
+    ImageButton speakButton;
     TextView commandTextView;
     public static TextView receivedTextView;
     public static EditText ipAddressEditText;
@@ -38,7 +39,7 @@ public class Tab1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.tab_1,container,false);
-        speakButton = (Button) view.findViewById(R.id.speakButton);
+        speakButton = (ImageButton) view.findViewById(R.id.speakButton);
         commandTextView = (TextView) view.findViewById(R.id.commandTextView);
         receivedTextView = (TextView) view.findViewById(R.id.receivedTextView);
         languageEditText = (EditText) view.findViewById(R.id.languageEditText);

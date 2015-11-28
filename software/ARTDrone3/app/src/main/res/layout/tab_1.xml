@@ -13,11 +13,12 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-        <Button
+        <ImageButton
             android:id="@+id/speakButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Speak" />
+            android:src="@drawable/mic"
+            android:background="@drawable/oval"/>
 
         <TextView
             android:id="@+id/commandTextView"
@@ -110,6 +111,5 @@
             android:text="Stop" />
 
     </LinearLayout>
-
 
 </LinearLayout>
