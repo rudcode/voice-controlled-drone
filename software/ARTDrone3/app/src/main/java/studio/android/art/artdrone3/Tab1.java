@@ -31,11 +31,11 @@ public class Tab1 extends Fragment {
     public static EditText portAddressEditText;
     EditText languageEditText;
     EditText commandEdit;
-    Button sendCommandButton;
+    ImageButton sendCommandButton;
     Button connectButton;
     Button stopButton;
     String voiceCommand;
-
+    ImageButton FAB;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.tab_1,container,false);
@@ -46,7 +46,7 @@ public class Tab1 extends Fragment {
         ipAddressEditText = (EditText) view.findViewById(R.id.ipAddressEditText);
         portAddressEditText = (EditText) view.findViewById(R.id.portAddressEditText);
         commandEdit = (EditText) view.findViewById(R.id.commandEdit);
-        sendCommandButton = (Button) view.findViewById(R.id.sendCommandButton);
+        sendCommandButton = (ImageButton) view.findViewById(R.id.sendCommandButton);
         connectButton =  (Button) view.findViewById(R.id.connectButton);
         stopButton =  (Button) view.findViewById(R.id.stopButton);
 
@@ -114,7 +114,17 @@ public class Tab1 extends Fragment {
                 }
             }
         });
+        FAB = (ImageButton) view.findViewById(R.id.imageButton);
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent i = new Intent(getActivity(),SecondActivity.class);
+                startActivity(i);
+
+
+            }
+        });
         return view;
     }
 
