@@ -124,7 +124,7 @@
             android:id="@+id/languageEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".40"
+            android:layout_weight="0.38"
             android:text="en-US" >
         </EditText>
         <EditText
