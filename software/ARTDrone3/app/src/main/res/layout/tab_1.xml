@@ -72,13 +72,13 @@
         android:id="@+id/editText"
         android:text="IP Address "
         android:textStyle="italic"
-        android:layout_weight="0.25" />
+        android:layout_weight="0.12" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/editText3"
-            android:layout_weight="0.44"
+            android:layout_weight="0.22"
             android:text="Port Address"
             android:textStyle="italic" />
     </LinearLayout>
@@ -108,14 +108,27 @@
     <Space
         android:layout_width="match_parent"
         android:layout_height="17dp" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
 
-    <TextView
-        android:layout_width="567dp"
+        <TextView
+        android:layout_width="88dp"
         android:layout_height="wrap_content"
         android:id="@+id/editText2"
-        android:text=" Language                                           Manual Command"
-        android:textStyle="italic" />
+        android:text=" Language"
+        android:textStyle="italic"
+            android:layout_weight="0.57" />
 
+        <TextView
+            android:layout_width="88dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText6"
+            android:text=" Manual Command"
+            android:textStyle="italic"
+            android:layout_weight="0.46" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
@@ -124,7 +137,7 @@
             android:id="@+id/languageEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.38"
+            android:layout_weight="0.18"
             android:text="en-US" >
         </EditText>
         <EditText
@@ -132,7 +145,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="type command"
-            android:layout_gravity="bottom">
+            android:layout_gravity="bottom"
+            android:layout_weight="0.03">
         </EditText>
 
     </LinearLayout>
@@ -213,8 +227,8 @@
             android:id="@+id/imageButton"
             android:layout_gravity="right|bottom"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="15dp" />
+            android:layout_marginTop="15dp"
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 
 </LinearLayout>

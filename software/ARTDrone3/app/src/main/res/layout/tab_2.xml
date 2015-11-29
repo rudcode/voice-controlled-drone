@@ -20,8 +20,9 @@
             android:layout_height="match_parent"
             android:id="@+id/editText3"
             android:layout_weight="0.18"
-            android:text="                                       Video Feed Drone"
-            android:textStyle="italic" />
+            android:text="Video Feed Drone"
+            android:textStyle="italic"
+            android:gravity="center_horizontal" />
     </LinearLayout>
 
 </RelativeLayout>
