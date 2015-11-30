@@ -14,7 +14,6 @@ import android.view.MenuItem;
 
 import java.util.Objects;
 
-
 public class MainActivity extends AppCompatActivity {
 
     // Declaring Your View and Variables
@@ -89,16 +88,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static class ARTDroneStatus {
-        public static boolean armMode;
-        public static String flightMode;
-        public static float altitude;
-        public static float compass;
-        public static float velocityX;
-        public static float velocityY;
-        public static float velocityZ;
-        public static float airTemperature;
-        public static float airPressure;
-        public static float battery;
+        public boolean armMode;
+        public String flightMode;
+        public float altitude;
+        public float compass;
+        public float velocityX;
+        public float velocityY;
+        public float velocityZ;
+        public float airTemperature;
+        public float airPressure;
+        public float battery;
 
         public ARTDroneStatus() {
             armMode = false;

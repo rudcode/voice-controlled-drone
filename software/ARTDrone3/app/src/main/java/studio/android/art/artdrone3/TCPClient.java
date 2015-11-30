@@ -133,10 +133,6 @@ public class TCPClient {
 
             } catch (Exception e) {
                 Log.e("TCP", "S: Error", e);
-            } finally {
-                //the socket must be closed. It is not possible to reconnect to this socket
-                // after it is closed, which means a new socket instance has to be created.
-                socket.close();
             }
 
         } catch (Exception e) {
