@@ -72,7 +72,7 @@
         android:id="@+id/editText"
         android:text="IP Address "
         android:textStyle="italic"
-        android:layout_weight="0.12" />
+        android:layout_weight="0.01" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -88,9 +88,8 @@
 
         <EditText
             android:id="@+id/ipAddressEditText"
-            android:layout_width="match_parent"
+            android:layout_width="173dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".40"
             android:text="192.168.43.102" >
         </EditText>
 
@@ -222,7 +221,7 @@
         <ImageButton
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/floating"
+            android:src="@drawable/info"
             android:background="@drawable/circle"
             android:id="@+id/imageButton"
             android:layout_gravity="right|bottom"
