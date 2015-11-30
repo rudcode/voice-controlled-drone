@@ -163,7 +163,7 @@ public class Tab1 extends Fragment {
                     commandTextView.setText(voiceCommand);
 
                     if(MainActivity.tcpClient != null) {
-                        MainActivity.tcpClient.sendMessage("sc" + voiceCommand);
+                        MainActivity.tcpClient.sendMessage("sc:" + voiceCommand);
                     }
                     else {
                         receivedTextView.setText("Not connected");
