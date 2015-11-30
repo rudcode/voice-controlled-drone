@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.PopupWindow;
 
 import java.util.ArrayList;
 
@@ -107,24 +109,41 @@ public class Tab1 extends Fragment {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.tcpClient != null) {
+                if (MainActivity.tcpClient != null) {
                     MainActivity.tcpClient.stopClient();
                     MainActivity.tcpClient = null;
                     MainActivity.connectTCP = null;
                 }
             }
         });
-        FAB = (ImageButton) view.findViewById(R.id.imageButton);
-        FAB.setOnClickListener(new View.OnClickListener() {
+        final ImageButton btnOpenPopup = (ImageButton) view.findViewById(R.id.imageButton);
+        btnOpenPopup.setOnClickListener(new Button.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
+            public void onClick(View arg0) {
+                LayoutInflater layoutInflater = (LayoutInflater) getActivity().getBaseContext()
+                        .getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
+                View popupView = layoutInflater.inflate(R.layout.activity_second,
+                        null);
+                final PopupWindow popupWindow = new PopupWindow(popupView,
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-                Intent i = new Intent(getActivity(),SecondActivity.class);
-                startActivity(i);
+                Button btnDismiss = (Button) popupView
+                        .findViewById(R.id.dismiss);
+                btnDismiss.setOnClickListener(new Button.OnClickListener() {
 
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        popupWindow.dismiss();
+                    }
+                });
+
+                popupWindow.showAtLocation(btnOpenPopup, Gravity.CENTER, 0, 0);
 
             }
         });
+
         return view;
     }
 
