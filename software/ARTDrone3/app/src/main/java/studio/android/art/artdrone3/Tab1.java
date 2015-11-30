@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.PopupWindow;
 
 import java.util.ArrayList;
 
@@ -37,10 +37,11 @@ public class Tab1 extends Fragment {
     Button connectButton;
     Button stopButton;
     String voiceCommand;
-    ImageButton FAB;
+    ImageButton btnOpenPopup;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.tab_1,container,false);
+        View view = inflater.inflate(R.layout.tab_1,container,false);
         speakButton = (ImageButton) view.findViewById(R.id.speakButton);
         commandTextView = (TextView) view.findViewById(R.id.commandTextView);
         receivedTextView = (TextView) view.findViewById(R.id.receivedTextView);
@@ -51,6 +52,7 @@ public class Tab1 extends Fragment {
         sendCommandButton = (ImageButton) view.findViewById(R.id.sendCommandButton);
         connectButton =  (Button) view.findViewById(R.id.connectButton);
         stopButton =  (Button) view.findViewById(R.id.stopButton);
+        btnOpenPopup = (ImageButton) view.findViewById(R.id.imageButton);
 
         speakButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,14 +111,14 @@ public class Tab1 extends Fragment {
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (MainActivity.tcpClient != null) {
+                if(MainActivity.tcpClient != null) {
                     MainActivity.tcpClient.stopClient();
                     MainActivity.tcpClient = null;
                     MainActivity.connectTCP = null;
                 }
             }
         });
-        final ImageButton btnOpenPopup = (ImageButton) view.findViewById(R.id.imageButton);
+
         btnOpenPopup.setOnClickListener(new Button.OnClickListener() {
 
             @Override
