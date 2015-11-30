@@ -15,8 +15,6 @@ import android.widget.TextView;
  * Created by hp1 on 21-01-2015.
  */
 public class Tab3 extends Fragment {
-    public static ARTDroneStatus droneStatus;
-
     public static TextView armMode;
     public static TextView flightMode;
     public static TextView altitude;
@@ -44,19 +42,6 @@ public class Tab3 extends Fragment {
         battery = (TextView) v.findViewById(R.id.battery);
 
         return v;
-    }
-
-    public class ARTDroneStatus {
-        public boolean armMode = false;
-        public String flightMode = "Land";
-        public float altitude = 0;
-        public float compass = 0;
-        public float velocityX = 0;
-        public float velocityY = 0;
-        public float velocityZ = 0;
-        public float airTemperature = 0;
-        public float airPressure = 0;
-        public float battery = 0;
     }
 
 }

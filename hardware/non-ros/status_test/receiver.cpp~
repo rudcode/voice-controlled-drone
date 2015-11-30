@@ -60,7 +60,7 @@ int main(int argc , char *argv[])
 				artificial_status[counter] = (rand()%1000)*0.327*(0.3+counter);			
 			}		
 				
-			sprintf(client_message,"ds:1;land;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;\n",
+			sprintf(client_message,"ds:1;land;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;",
 			artificial_status[2],
 			artificial_status[3],
 			artificial_status[4],

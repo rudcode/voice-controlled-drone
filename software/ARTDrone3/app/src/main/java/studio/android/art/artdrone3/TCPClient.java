@@ -106,7 +106,7 @@ public class TCPClient {
 
                 while (mRun) {
                     mServerMessage = mBufferIn.readLine();
-                    Log.e("Debug1", mServerMessage);
+                    //Log.e("Debug1", mServerMessage);
                     if (Objects.equals(mServerMessage, "*AI")) {
                         mServerMessage = "";
                         mServerMessage = mBufferIn.readLine();
@@ -114,7 +114,7 @@ public class TCPClient {
                         if (len > 0) {
                             data = new byte[len];
 
-                            Log.e("Debug2", len + "");
+                            //Log.e("Debug2", len + "");
                             mDataInputStream.readFully(data, 0, len);
 
                             if (mMessageListener != null) {

@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".50"
-            android:text="192.168.43.102" >
+            android:text="10.5.76.245" >
         </EditText>
 
         <EditText
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_weight=".50"
             android:inputType="number"
-            android:text="50006" >
+            android:text="50005" >
         </EditText>
     </LinearLayout>
 
