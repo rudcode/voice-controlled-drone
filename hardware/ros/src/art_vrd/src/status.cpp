@@ -106,7 +106,7 @@ void mainStatus(const std_msgs::String& vData){
 	string s_compass = static_cast<ostringstream*>( &(ostringstream() << compass) )->str();
 	string s_vel_x = static_cast<ostringstream*>( &(ostringstream() << vel_x) )->str();
 	string s_vel_y = static_cast<ostringstream*>( &(ostringstream() << vel_y) )->str();
-	//string s_vel_z = static_cast<ostringstream*>( &(ostringstream() << vel_z) )->str();
+	string s_vel_z = static_cast<ostringstream*>( &(ostringstream() << vel_z) )->str();
 	string s_temperature = static_cast<ostringstream*>( &(ostringstream() << temperature) )->str();
 	string s_pressure = static_cast<ostringstream*>( &(ostringstream() << pressure) )->str();
 	string s_battery = static_cast<ostringstream*>( &(ostringstream() << battery) )->str();
@@ -114,7 +114,7 @@ void mainStatus(const std_msgs::String& vData){
 	std_msgs::String incoming_reply;
 	if ( vData.data[0] == 'd' && vData.data[1] == 's' ){
 		
-		incoming_reply.data = "ds:"+s_arm_state+";"+flight_mode+";"+s_rel_alt+";"+s_compass+";"+s_vel_x+";"+s_vel_y+";"+s_temperature+";"+s_pressure+";"+s_battery;
+		incoming_reply.data = "ds:"+s_arm_state+";"+flight_mode+";"+s_rel_alt+";"+s_compass+";"+s_vel_x+";"+s_vel_y+";"+s_vel_z";"+s_temperature+";"+s_pressure+";"+s_battery+";\n";
 		//debugging(incoming_reply.data);
 		pub_incoming_reply.publish(incoming_reply);
 		ROS_INFO_STREAM( "It's a ds command") ;	
