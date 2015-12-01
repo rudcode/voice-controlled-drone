@@ -137,6 +137,7 @@ include_directories(
  add_executable(status src/status.cpp)
  add_executable(tcp_bridge src/tcp_bridge.cpp)
  add_executable(camera_feed src/camera_feed.cpp)
+ add_executable(movement_controller src/movement_controller.cpp)
  
 
 ## Add cmake target dependencies of the executable
@@ -160,6 +161,10 @@ include_directories(
  target_link_libraries(camera_feed
    ${catkin_LIBRARIES}
    ${OpenCV_LIBRARIES} 
+ )
+ 
+ target_link_libraries(movement_controller
+   ${catkin_LIBRARIES}
  )
 
 
