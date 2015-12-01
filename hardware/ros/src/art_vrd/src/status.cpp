@@ -21,7 +21,7 @@ using namespace std;
 
 
 bool arm_state = 0;
-string flight_mode;
+string flight_mode = "AUTO";
 float rel_alt = 0;
 float compass = 0;
 float vel_x = 0;
