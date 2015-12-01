@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="#FAFAFA"
     android:layout_height="match_parent">
 
     <TextView
@@ -9,11 +10,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Drone Status"
         android:id="@+id/textView"
-        android:layout_marginTop="17dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="29dp"
         android:textStyle="bold|italic"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
