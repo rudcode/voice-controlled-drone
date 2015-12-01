@@ -2,10 +2,14 @@
 #include "geometry_msgs/Vector3Stamped.h"
 #include "sensor_msgs/Temperature.h"
 #include "sensor_msgs/FluidPressure.h"
-#include "mavros/BatteryStatus.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/String.h"
-#include "mavros/State.h"
+// ################ new mavros msg lib is in mavros_msgs ################ 
+#include "mavros_msgs/State.h"
+#include "mavros_msgs/BatteryStatus.h"
+//#include "mavros/BatteryStatus.h"
+//#include "mavros/State.h"
+// ################ new mavros msg lib is in mavros_msgs ################ 
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -29,13 +33,19 @@ float battery = 0;
 
 
 void debugging(string drone_status_debug);
-void stateReceiver(const mavros::State& state_recv);
 void altReceiver(const std_msgs::Float64& alt_recv);
 void compassReceiver(const std_msgs::Float64& compass_recv);
 void velocityReceiver(const geometry_msgs::Vector3Stamped& velocity_recv);
 void temperatureReceiver(const sensor_msgs::Temperature& temperature_recv);
 void pressureReceiver(const sensor_msgs::FluidPressure& pressure_recv);
-void batteryReceiver(const mavros::BatteryStatus& battery_recv);
+
+// ################ new mavros msg lib is in mavros_msgs ################ 
+void stateReceiver(const mavros_msgs::State& state_recv);
+void batteryReceiver(const mavros_msgs::BatteryStatus& battery_recv);
+//void stateReceiver(const mavros::State& state_recv);
+//void batteryReceiver(const mavros::BatteryStatus& battery_recv);
+// ################ new mavros msg lib is in mavros_msgs ################ 
+
 void mainStatus(const std_msgs::String& vData);
 ros::Publisher pub_incoming_reply;
 
@@ -58,7 +68,10 @@ int main(int argc, char **argv)
   return 0;
 }
 
-void stateReceiver(const mavros::State& state_recv){
+
+// ################ new mavros msg lib is in mavros_msgs ################ 
+// stateReceiver(const mavros::State& state_recv)
+void stateReceiver(const mavros_msgs::State& state_recv){
 	
 	flight_mode = state_recv.mode;
 	arm_state = state_recv.armed;
@@ -93,7 +106,9 @@ void pressureReceiver(const sensor_msgs::FluidPressure& pressure_recv){
 	pressure = pressure_recv.fluid_pressure;
 }
 
-void batteryReceiver(const mavros::BatteryStatus& battery_recv){
+// ################ new mavros msg lib is in mavros_msgs ################ 
+//void batteryReceiver(const mavros::BatteryStatus& battery_recv
+void batteryReceiver(const mavros_msgs::BatteryStatus& battery_recv){
 	
 	battery = battery_recv.voltage;
 	
@@ -101,20 +116,20 @@ void batteryReceiver(const mavros::BatteryStatus& battery_recv){
 
 
 void mainStatus(const std_msgs::String& vData){
-	string s_arm_state = static_cast<ostringstream*>( &(ostringstream() << arm_state) )->str();
-	string s_rel_alt = static_cast<ostringstream*>( &(ostringstream() << rel_alt) )->str();
-	string s_compass = static_cast<ostringstream*>( &(ostringstream() << compass) )->str();
-	string s_vel_x = static_cast<ostringstream*>( &(ostringstream() << vel_x) )->str();
-	string s_vel_y = static_cast<ostringstream*>( &(ostringstream() << vel_y) )->str();
-	string s_vel_z = static_cast<ostringstream*>( &(ostringstream() << vel_z) )->str();
+	string s_arm_state	 = static_cast<ostringstream*>( &(ostringstream() << arm_state) )->str();
+	string s_rel_alt	 = static_cast<ostringstream*>( &(ostringstream() << rel_alt) )->str();
+	string s_compass	 = static_cast<ostringstream*>( &(ostringstream() << compass) )->str();
+	string s_vel_x		 = static_cast<ostringstream*>( &(ostringstream() << vel_x) )->str();
+	string s_vel_y		 = static_cast<ostringstream*>( &(ostringstream() << vel_y) )->str();
+	string s_vel_z		 = static_cast<ostringstream*>( &(ostringstream() << vel_z) )->str();
 	string s_temperature = static_cast<ostringstream*>( &(ostringstream() << temperature) )->str();
-	string s_pressure = static_cast<ostringstream*>( &(ostringstream() << pressure) )->str();
-	string s_battery = static_cast<ostringstream*>( &(ostringstream() << battery) )->str();
+	string s_pressure	 = static_cast<ostringstream*>( &(ostringstream() << pressure) )->str();
+	string s_battery	 = static_cast<ostringstream*>( &(ostringstream() << battery) )->str();
 	
 	std_msgs::String incoming_reply;
 	if ( vData.data[0] == 'd' && vData.data[1] == 's' ){
 		
-		incoming_reply.data = "ds:"+s_arm_state+";"+flight_mode+";"+s_rel_alt+";"+s_compass+";"+s_vel_x+";"+s_vel_y+";"+s_vel_z";"+s_temperature+";"+s_pressure+";"+s_battery+";\n";
+		incoming_reply.data = "ds:"+s_arm_state+";"+flight_mode+";"+s_rel_alt+";"+s_compass+";"+s_vel_x+";"+s_vel_y+";"+s_vel_z+";"+s_temperature+";"+s_pressure+";"+s_battery+";\n";
 		//debugging(incoming_reply.data);
 		pub_incoming_reply.publish(incoming_reply);
 		ROS_INFO_STREAM( "It's a ds command") ;	
