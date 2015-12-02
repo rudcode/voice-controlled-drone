@@ -23,12 +23,15 @@
 #define COMMAND_LIST 9
 #define DISTANCELIMIT 10
 
+using namespace std;
 
 void positionReceiver(const geometry_msgs::PoseStamped& local_recv);
 void mainMovementController(const std_msgs::String& main_fmc);
 void altReceiver(const std_msgs::Float64& alt_msg);
 // ################ new mavros msg lib is in mavros_msgs ################ 
 //void rcinReceiver(const mavros::RCIn& rc_in_data);
+//void stateReceiver(const mavros::State& state_recv);
+void stateReceiver(const mavros_msgs::State& state_recv);
 void rcinReceiver(const mavros_msgs::RCIn& rc_in_data);
 // ################ new mavros msg lib is in mavros_msgs ################ 
 
@@ -39,6 +42,7 @@ int command_list = COMMAND_LIST;
 int pos_x = 0;
 int pos_y = 0;
 int pos_z = 0;
+string flight_mode = "AUTO";
 bool success;
 int rc_taken = 1;
 int rc_transit_delay = 2000000;
@@ -63,6 +67,7 @@ int main(int argc, char **argv)
 	ros::Subscriber rc_in_sub 	= n.subscribe("/mavros/rc/in", 100, rcinReceiver);
 	ros::Subscriber sub_rel_alt = n.subscribe("/mavros/global_position/rel_alt", 1, altReceiver );
 	ros::Subscriber sub_pos 	= n.subscribe("/mavros/local_position/local", 100, positionReceiver );
+	ros::Subscriber sub_state 	= n.subscribe("/mavros/state", 100, stateReceiver);
 	// ################ new mavros msg lib is in mavros_msgs ################ 
 	//client					= n.serviceClient<mavros::SetMode>("/mavros/set_mode");
 	client					 	= n.serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
@@ -104,12 +109,18 @@ void altReceiver(const std_msgs::Float64& alt_msg){
 	rel_alt = alt_msg.data;
 }
 
-
 void positionReceiver(const geometry_msgs::PoseStamped& local_recv){
 	
 	pos_x = local_recv.pose.position.x;
 	pos_y = local_recv.pose.position.y;
 	pos_z = local_recv.pose.position.z;
+}
+
+// ################ new mavros msg lib is in mavros_msgs ################ 
+// stateReceiver(const mavros::State& state_recv)
+void stateReceiver(const mavros_msgs::State& state_recv){
+	
+	flight_mode = state_recv.mode;
 }
 
 void mainMovementController(const std_msgs::String& vData)
@@ -230,9 +241,50 @@ void mainMovementController(const std_msgs::String& vData)
 				
 			}
 			
-			else if(command_detected == 6 ){}
-			else if(command_detected == 7 ){}
-			else if(command_detected == 8 ){}
+			else if(command_detected == 6 ){
+				
+				flight.request.base_mode = 0;				//Set to 0 to use custom_mode
+				flight.request.custom_mode = "RTL";		//Set to '' to use base_mode
+				success = client.call(flight);
+
+				// Check for success and print out info.
+				if(success){
+					ROS_INFO_STREAM( "Flight Mode changed to "<< flight.request.custom_mode ) ;
+				} 
+				else {
+					ROS_ERROR_STREAM( "Failed to changed." ) ;
+				}
+			}
+			
+			else if(command_detected == 7 ){
+				
+				flight.request.base_mode = 0;				//Set to 0 to use custom_mode
+				flight.request.custom_mode = "LAND";		//Set to '' to use base_mode
+				success = client.call(flight);
+
+				// Check for success and print out info.
+				if(success){
+					ROS_INFO_STREAM( "Flight Mode changed to "<< flight.request.custom_mode ) ;
+				} 
+				else {
+					ROS_ERROR_STREAM( "Failed to changed." ) ;
+				}
+			}
+			
+			else if(command_detected == 8 ){				
+				
+				flight.request.base_mode = 0;				//Set to 0 to use custom_mode
+				flight.request.custom_mode = "AUTO";		//Set to '' to use base_mode
+				success = client.call(flight);
+
+				// Check for success and print out info.
+				if(success){
+					ROS_INFO_STREAM( "Flight Mode changed to "<< flight.request.custom_mode ) ;
+				} 
+				else {
+					ROS_ERROR_STREAM( "Failed to changed." ) ;
+				}
+			}
 			
 			if(command_detected != -1 ){
 				incoming_reply.data = "sc:ok\n";
@@ -247,7 +299,7 @@ void mainMovementController(const std_msgs::String& vData)
 		else{
 			incoming_reply.data = "sc:rc_takeover\n";
 			pub_incoming_reply.publish(incoming_reply);
-			ROS_INFO("RC Take Over!");
+			ROS_ERROR_STREAM( "RC Take Over!" ) ;
 		}
 		ROS_INFO_STREAM( "It's a sc command") ;
 		
