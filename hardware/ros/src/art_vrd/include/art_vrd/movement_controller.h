@@ -19,6 +19,12 @@
 #define COMMAND_LIST 9
 #define DISTANCELIMIT 10
 
+//Define RC Throttle Values [Differs for all controllers]
+#define MIDDLE 1500  //PWM Value with Stick at Middle 
+#define RISING 1690  //PWM Value with Stick Slightly Above Middle
+#define RELEASE 1100 //PWM Value when Stick is completely Lowered
+#define NO_RC 900	 //PWM Value when no RC Controller has been connected.
+
 void positionReceiver(const geometry_msgs::PoseStamped& local_recv);
 void mainMovementController(const std_msgs::String& main_fmc);
 void altReceiver(const std_msgs::Float64& alt_msg);
@@ -43,6 +49,8 @@ int pos_x = 0;
 int pos_y = 0;
 int pos_z = 0;
 string flight_mode = "AUTO";
+bool arm_state = 0;
+int rc_in_channel_throttle = 0;
 int rc_in_channel_7 = 0;
 float rel_alt = 0;
 int channel_7_mid = 1500;
@@ -57,7 +65,7 @@ ros::ServiceClient client;
 //mavros::SetMode flight;
 //mavros::OverrideRCIn rc_command;
 mavros_msgs::SetMode flight;
-mavros::OverrideRCIn rc_override;
+mavros_msgs::OverrideRCIn rc_override_data;
 
 // ################ new mavros msg lib is in mavros_msgs ################ 
 geometry_msgs::PoseStamped quad_pos;
