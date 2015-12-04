@@ -138,6 +138,7 @@ include_directories(
  add_executable(tcp_bridge src/tcp_bridge.cpp)
  add_executable(camera_feed src/camera_feed.cpp)
  add_executable(movement_controller src/movement_controller.cpp)
+ add_executable(system_monitor src/system_monitor.cpp)
  
 
 ## Add cmake target dependencies of the executable
@@ -149,6 +150,10 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+ 
+ target_link_libraries(system_monitor
+   ${catkin_LIBRARIES}
+ )
  
  target_link_libraries(status
    ${catkin_LIBRARIES}
@@ -169,8 +174,8 @@ include_directories(
 
 
 ############## Example ################
-# add_executable(subscriber src/example/subscriber.cpp)
-# target_link_libraries(subscriber
+# add_executable(spin_test src/example/spin_test.cpp)
+# target_link_libraries(spin_test
 #   ${catkin_LIBRARIES}
 # )
  
