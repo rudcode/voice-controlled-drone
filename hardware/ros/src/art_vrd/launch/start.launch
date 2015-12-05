@@ -1,0 +1,11 @@
+<launch>
+
+	<node name="mavsys" pkg="mavros" type="mavsys" args="rate --all 10" />
+	<node name="mavparam" pkg="mavros" type="mavparam" args="set SYSID_MYGCS 1" />
+	<node name="movement_controller" pkg="art_vrd" output="screen" type="movement_controller"/>
+	<node name="camera_feed" pkg="art_vrd" output="screen" type="camera_feed"/>
+	<node name="tcp_bridge" pkg="art_vrd" output="screen" type="tcp_bridge"/>
+	<node name="drone_status" pkg="art_vrd" output="screen" type="drone_status"/>
+	<node name="system_monitor" pkg="art_vrd" output="screen" type="system_monitor"/>
+		
+</launch>
