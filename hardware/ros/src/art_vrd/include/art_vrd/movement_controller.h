@@ -19,12 +19,6 @@
 #define COMMAND_LIST 9
 #define DISTANCELIMIT 10
 
-//Define RC Throttle Values [Differs for all controllers]
-#define MIDDLE 1500  //PWM Value with Stick at Middle 
-#define RISING 1690  //PWM Value with Stick Slightly Above Middle
-#define RELEASE 1100 //PWM Value when Stick is completely Lowered
-#define NO_RC 900	 //PWM Value when no RC Controller has been connected.
-
 void positionReceiver(const geometry_msgs::PoseStamped& local_recv);
 void mainMovementController(const std_msgs::String& main_fmc);
 void altReceiver(const std_msgs::Float64& alt_msg);
