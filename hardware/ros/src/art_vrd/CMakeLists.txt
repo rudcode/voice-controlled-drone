@@ -134,7 +134,7 @@ include_directories(
 
 ## Declare a C++ executable
 # add_executable(art_vrd_node src/art_vrd_node.cpp)
- add_executable(status src/status.cpp)
+ add_executable(drone_status src/drone_status.cpp)
  add_executable(tcp_bridge src/tcp_bridge.cpp)
  add_executable(camera_feed src/camera_feed.cpp)
  add_executable(movement_controller src/movement_controller.cpp)
@@ -155,7 +155,7 @@ include_directories(
    ${catkin_LIBRARIES}
  )
  
- target_link_libraries(status
+ target_link_libraries(drone_status
    ${catkin_LIBRARIES}
  )
  

@@ -52,7 +52,7 @@ ros::Publisher pub_incoming_reply;
 int main(int argc, char **argv)
 {
 
-	ros::init(argc, argv, "status");
+	ros::init(argc, argv, "drone_status");
 	ros::NodeHandle status;
 	ros::Subscriber sub_state = status.subscribe("mavros/state", 100, stateReceiver);
 	ros::Subscriber sub_rel_alt = status.subscribe("/mavros/global_position/rel_alt", 1, altReceiver );
@@ -135,9 +135,8 @@ void mainStatus(const std_msgs::String& vData){
 		ROS_INFO_STREAM( "It's a ds command") ;	
 	}
 	else{
-		ROS_INFO_STREAM( "It's not a ds command") ;
+		ROS_WARN_STREAM( "It's not a ds command") ;
 	}	
-	ROS_INFO_STREAM( "Voice Data : " << vData.data) ;
 }
 
 void debugging(string drone_status_debug){
