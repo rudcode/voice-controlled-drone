@@ -73,7 +73,6 @@ void mainCameraFeed(const std_msgs::String& vData){
 				
 	}
 	else{
-		ROS_INFO_STREAM( "It's not a vf command") ;
+		ROS_WARN_STREAM( "It's not a vf command") ;
 	}	
-	ROS_INFO_STREAM( "Voice Data : " << vData.data) ;
 }

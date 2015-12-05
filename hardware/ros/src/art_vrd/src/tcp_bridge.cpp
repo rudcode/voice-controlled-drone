@@ -26,16 +26,17 @@ int main(int argc, char **argv){
 	ros::NodeHandle n;
 	ros::Publisher pub_voice = n.advertise<std_msgs::String>("art_vrd/voice_data", 1024);
 	ros::Subscriber sub_incoming_reply = n.subscribe("art_vrd/incoming_reply", 1024, incomingReply);
-	
+	ROS_INFO("Starting TCP Bridge.");
 	// ################# Intializing Socket	#################  
     int socket_desc , client_sock , c , read_size;
     struct sockaddr_in server , client;
     char client_message[512];
     int port_number = 54321;
+    // add argument to tcp port so that it can be changed on the fly via .launch file
      
     socket_desc = socket(AF_INET , SOCK_STREAM , 0);
     if (socket_desc == -1){
-        printf("Could not create socket");
+		ROS_ERROR_STREAM("Could not create socket");
     }
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
@@ -49,7 +50,7 @@ int main(int argc, char **argv){
     // ################# Intializing Socket	#################  
 		 
 	while(ros::ok()){
-		puts("Waiting for incoming connections...");
+		ROS_INFO_STREAM("Waiting for incoming connections...");
 		
 		client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
 		if (client_sock < 0){
@@ -57,22 +58,22 @@ int main(int argc, char **argv){
 			perror("accept failed");
 			return 1;
 		}
-		puts("Connection accepted");
+		ROS_INFO_STREAM("Connection accepted");
 		 
-
 		while(ros::ok()){
 			read_size = recv(client_sock , client_message , 512 , 0);
 		
 			client_message[read_size] = '\0';
+			ROS_INFO_STREAM( "Voice Data : " << client_message);
 			voice_cmd.data = client_message;
 			pub_voice.publish(voice_cmd);			
 			incoming_reply = "NULL";
 			
-			puts("Waiting reply");
+			ROS_INFO_STREAM("Waiting reply");
 			while(read_size != -1 && read_size != 0 && incoming_reply == "NULL" && ros::ok()){
 				ros::spinOnce();			
 			}
-			puts("Reply accepted");
+			ROS_INFO_STREAM("Reply accepted");
 			
 			message_reply = incoming_reply.c_str();
 			incoming_reply_size = incoming_reply.size();
@@ -89,14 +90,14 @@ int main(int argc, char **argv){
 			// ################## VF Command Reply Header Data ########################
 			
 			send(client_sock , message_reply , incoming_reply_size , 0);
-		
-			incoming_reply = "NULL";
+			
+			//incoming_reply = "NULL";
 			
 			if(read_size == 0){
-				puts("Client disconnected");
+				ROS_WARN_STREAM("Client disconnected");
 				break;
 			}
-			else if(read_size == -1){
+			else if(read_size == -1 || incoming_reply == "NULL"){
 				perror("recv failed");
 				break;
 			}

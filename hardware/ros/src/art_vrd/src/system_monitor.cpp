@@ -69,17 +69,26 @@ int main(int argc, char **argv)
 	pub_rc_override	= sys_mon.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1, true);
 	mavros_msgs::OverrideRCIn rc_override_data;
 	
+	// set initial state for rc override take over.
+	if(rc_in_data_channel[6] < channel_7_mid){
+			rc_failsafe_override_flag = 0;
+	}
+	else if (rc_in_data_channel[6] > channel_7_mid){
+			rc_failsafe_override_flag = 1;
+	}
+	
 	while(ros::ok()){
+		ros::spinOnce();
 		if(rc_in_data_channel[6] < channel_7_mid && rc_failsafe_override_flag == 0){
 			for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;
 			pub_rc_override.publish(rc_override_data);
 			rc_failsafe_override_flag = 1;
+			ROS_ERROR_STREAM( "RC is now taking over!") ;
 		}
 		else if (rc_in_data_channel[6] > channel_7_mid && rc_failsafe_override_flag == 1){
 			rc_failsafe_override_flag = 0;
+			ROS_ERROR_STREAM( "Drone is now taking over") ;
 		}
-			
-	ros::spinOnce();
 	}
   
   return 0;
