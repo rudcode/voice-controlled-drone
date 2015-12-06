@@ -17,19 +17,17 @@ using namespace cv;
 void mainCameraFeed(const std_msgs::String& vData);
 ros::Publisher pub_incoming_reply;
 
-// ############ Start OpenCV Variable ############ 
+// ############ OpenCV Variable ############ 
 char video_data[100000];
 vector<uchar> buff;
 vector<int> param = vector<int>(2);      
 Mat image_capture;  
 VideoCapture cap(0);			// Membuka Kamera
-
-
-// ############ End OpenCV Variable ############ 
+// ############ OpenCV Variable ############ 
 
 int main(int argc, char **argv){
 	
-	// ############  Start Video Init ############   
+	// ############  Video Init ############   
     cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);		// Set Lebar gambar
 	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 360);		// Set tinggi Gambar
     param[0] = CV_IMWRITE_JPEG_QUALITY;			// set tipe encoding 
@@ -39,7 +37,7 @@ int main(int argc, char **argv){
 		cout << "Error\n";
 		return -1;
 	}
-	// ############  End Video Init ############  
+	// ############  Video Init ############  
 	
 	
 	ros::init(argc, argv, "camera_feed");

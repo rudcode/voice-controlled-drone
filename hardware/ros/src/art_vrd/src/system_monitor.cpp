@@ -4,16 +4,10 @@
 #include "sensor_msgs/FluidPressure.h"
 #include "std_msgs/Float64.h"
 #include "std_msgs/String.h"
-// ################ new mavros msg lib is in mavros_msgs ################ 
 #include "mavros_msgs/State.h"
 #include "mavros_msgs/BatteryStatus.h"
 #include "mavros_msgs/OverrideRCIn.h"
 #include "mavros_msgs/RCIn.h"
-//#include "mavros/OverrideRCIn.h"
-//#include "mavros/RCIn.h"
-//#include "mavros/BatteryStatus.h"
-//#include "mavros/State.h"
-// ################ new mavros msg lib is in mavros_msgs ################ 
 #include <string>
 #include <string.h>
 #include <iostream>
@@ -45,12 +39,8 @@ void velocityReceiver(const geometry_msgs::Vector3Stamped& velocity_recv);
 void temperatureReceiver(const sensor_msgs::Temperature& temperature_recv);
 void pressureReceiver(const sensor_msgs::FluidPressure& pressure_recv);
 
-// ################ new mavros msg lib is in mavros_msgs ################ 
 void stateReceiver(const mavros_msgs::State& state_recv);
 void batteryReceiver(const mavros_msgs::BatteryStatus& battery_recv);
-//void stateReceiver(const mavros::State& state_recv);
-//void batteryReceiver(const mavros::BatteryStatus& battery_recv);
-// ################ new mavros msg lib is in mavros_msgs ################ 
 ros::Publisher pub_rc_override;
 
 int main(int argc, char **argv)
@@ -94,17 +84,12 @@ int main(int argc, char **argv)
   return 0;
 }
 
-
-// ################ new mavros msg lib is in mavros_msgs ################ 
-// stateReceiver(const mavros::State& state_recv)
 void stateReceiver(const mavros_msgs::State& state_recv){
 	
 	flight_mode = state_recv.mode;
 	arm_state = state_recv.armed;
 }
 
-// ################ new mavros msg lib is in mavros_msgs ################ 
-//void rcinReceiver(const mavros::RCIn& rc_in_data);
 void rcinReceiver(const mavros_msgs::RCIn& rc_in_data){
 	int x;
 	for (x = 0; x<8;x++){
@@ -142,8 +127,6 @@ void pressureReceiver(const sensor_msgs::FluidPressure& pressure_recv){
 	pressure = pressure_recv.fluid_pressure;
 }
 
-// ################ new mavros msg lib is in mavros_msgs ################ 
-//void batteryReceiver(const mavros::BatteryStatus& battery_recv
 void batteryReceiver(const mavros_msgs::BatteryStatus& battery_recv){
 	
 	battery = battery_recv.voltage;
