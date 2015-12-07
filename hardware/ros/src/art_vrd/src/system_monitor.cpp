@@ -38,10 +38,12 @@ void compassReceiver(const std_msgs::Float64& compass_recv);
 void velocityReceiver(const geometry_msgs::Vector3Stamped& velocity_recv);
 void temperatureReceiver(const sensor_msgs::Temperature& temperature_recv);
 void pressureReceiver(const sensor_msgs::FluidPressure& pressure_recv);
-
 void stateReceiver(const mavros_msgs::State& state_recv);
 void batteryReceiver(const mavros_msgs::BatteryStatus& battery_recv);
+void vDataMonitor(const std_msgs::String& vData);
 ros::Publisher pub_rc_override;
+ros::Publisher pub_incoming_reply;
+mavros_msgs::OverrideRCIn rc_override_data;
 
 int main(int argc, char **argv)
 {
@@ -56,8 +58,9 @@ int main(int argc, char **argv)
 	ros::Subscriber sub_pressure = sys_mon.subscribe("/mavros/imu/atm_pressure", 10, pressureReceiver );
 	ros::Subscriber sub_battery = sys_mon.subscribe("/mavros/battery", 10, batteryReceiver );
 	ros::Subscriber rc_in_sub 	= sys_mon.subscribe("/mavros/rc/in", 100, rcinReceiver);
+	ros::Subscriber sub_vd = sys_mon.subscribe("art_vrd/voice_data", 10, vDataMonitor);
+	pub_incoming_reply = sys_mon.advertise<std_msgs::String>("art_vrd/incoming_reply", 100);
 	pub_rc_override	= sys_mon.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1, true);
-	mavros_msgs::OverrideRCIn rc_override_data;
 	
 	// set initial state for rc override take over.
 	if(rc_in_data_channel[6] < channel_7_mid){
@@ -67,22 +70,11 @@ int main(int argc, char **argv)
 			rc_failsafe_override_flag = 1;
 	}
 	
-	while(ros::ok()){
-		ros::spinOnce();
-		if(rc_in_data_channel[6] < channel_7_mid && rc_failsafe_override_flag == 0){
-			for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;
-			pub_rc_override.publish(rc_override_data);
-			rc_failsafe_override_flag = 1;
-			ROS_ERROR_STREAM( "RC is now taking over!") ;
-		}
-		else if (rc_in_data_channel[6] > channel_7_mid && rc_failsafe_override_flag == 1){
-			rc_failsafe_override_flag = 0;
-			ROS_ERROR_STREAM( "Drone is now taking over") ;
-		}
-	}
+	ros::spin();
   
   return 0;
 }
+
 
 void stateReceiver(const mavros_msgs::State& state_recv){
 	
@@ -94,6 +86,16 @@ void rcinReceiver(const mavros_msgs::RCIn& rc_in_data){
 	int x;
 	for (x = 0; x<8;x++){
 		rc_in_data_channel[x] = rc_in_data.channels[x];
+	}
+	if(rc_in_data_channel[6] < channel_7_mid && rc_failsafe_override_flag == 0){
+		for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;
+		pub_rc_override.publish(rc_override_data);
+		rc_failsafe_override_flag = 1;
+		ROS_ERROR_STREAM( "RC is now taking over!") ;
+	}
+	else if (rc_in_data_channel[6] > channel_7_mid && rc_failsafe_override_flag == 1){
+		rc_failsafe_override_flag = 0;
+		ROS_ERROR_STREAM( "Drone is now taking over") ;
 	}
 	
 }
@@ -131,6 +133,18 @@ void batteryReceiver(const mavros_msgs::BatteryStatus& battery_recv){
 	
 	battery = battery_recv.voltage;
 	
+}
+void vDataMonitor(const std_msgs::String& vData){
+	std_msgs::String incoming_reply;
+	if ( vData.data[0] == 'd' && vData.data[1] == 's' ){
+		
+		incoming_reply.data = "error";
+		pub_incoming_reply.publish(incoming_reply);
+		ROS_INFO_STREAM( "It's a ds command") ;	
+	}
+	else{
+		ROS_WARN_STREAM( "It's not a ds command") ;
+	}	
 }
 
 void debugging(string drone_status_debug){
