@@ -7,3 +7,6 @@ Divided into 4 main nodes
 - Movement Controller
 - Camera Feed
 - Status
+
+notes :
+- every mavros type message are now in mavros_msgs
