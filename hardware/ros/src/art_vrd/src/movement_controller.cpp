@@ -9,15 +9,11 @@ int main(int argc, char **argv)
 	ros::Subscriber sub_rel_alt = n.subscribe("/mavros/global_position/rel_alt", 1, altReceiver );
 	ros::Subscriber sub_pos 	= n.subscribe("/mavros/local_position/local", 100, positionReceiver );
 	ros::Subscriber sub_state 	= n.subscribe("/mavros/state", 100, stateReceiver);
-	// ################ new mavros msg lib is in mavros_msgs ################ 
-	//client					= n.serviceClient<mavros::SetMode>("/mavros/set_mode");
-	//pub_rc_override			= n.advertise<mavros::OverrideRCIn>("/mavros/rc/override", 1, true);
 	client					 	= n.serviceClient<mavros_msgs::SetMode>("/mavros/set_mode");
 	pub_rc_override				= n.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1, true);
-	// ################ new mavros msg lib is in mavros_msgs ################ 
 	pub_quad_pos 				= n.advertise<geometry_msgs::PoseStamped>("mavros/setpoint_position/local", 1000);
 	pub_incoming_reply 			= n.advertise<std_msgs::String>("art_vrd/incoming_reply", 100);
-    ROS_INFO("Starting Movement Controller.");
+    ROS_INFO_STREAM("Starting Movement Controller.");
     
     known_command[0] = "naik";
 	known_command[1] = "turun";
@@ -54,14 +50,14 @@ void mainMovementController(const std_msgs::String& vData)
 		}
 		
 		if(rc_in_channel_7 > channel_7_mid){
-			if(command_detected == 0 && flight_mode == "GUIDED"){
+			if(command_detected == 0 && flight_mode == "GUIDED" && arm_state){
 				
 				// naik command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
 				moveDrone('z',pos_z+distance_vdata);
 			}
 			
-			else if(command_detected == 1 && flight_mode == "GUIDED"){
+			else if(command_detected == 1 && flight_mode == "GUIDED" && arm_state){
 				
 				// turun command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
@@ -69,14 +65,14 @@ void mainMovementController(const std_msgs::String& vData)
 		
 			}
 			
-			else if(command_detected == 2 && flight_mode == "GUIDED"){
+			else if(command_detected == 2 && flight_mode == "GUIDED" && arm_state){
 				
 				// maju command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
 				moveDrone('y',pos_y-distance_vdata);
 			}
 			
-			else if(command_detected == 3 && flight_mode == "GUIDED"){
+			else if(command_detected == 3 && flight_mode == "GUIDED" && arm_state){
 				
 				// mundur command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
@@ -84,7 +80,7 @@ void mainMovementController(const std_msgs::String& vData)
 
 			}
 			
-			else if(command_detected == 4 && flight_mode == "GUIDED" ){
+			else if(command_detected == 4 && flight_mode == "GUIDED" && arm_state){
 				
 				// kiri command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
@@ -92,7 +88,7 @@ void mainMovementController(const std_msgs::String& vData)
 
 			}
 			
-			else if(command_detected == 5 && flight_mode == "GUIDED"){
+			else if(command_detected == 5 && flight_mode == "GUIDED" && arm_state){
 				
 				// kanan command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
@@ -126,30 +122,47 @@ void mainMovementController(const std_msgs::String& vData)
 			
 			else if(command_detected == 8 && rel_alt < 1 ){				
 				
-				system("rosrun mavros mavsafety arm");
-				while (!arm_state && ros::ok()){
-					ros::spinOnce();
-				}
+				// line below this should simulate take off using RC 
+				// or try to use take-off in guided mode (if possible)
+				// try guided -> override to above 0 -> set x,y local position
+				
+				//changeFlightMode("GUIDED");
+				//usleep(2000000);
+				//for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;//Releases all Channels First
+				//rc_override_data.channels[2] = 100; //Ascending Throttle
+				//moveDrone('z',6);
+				//usleep(2000000);
+				
+				//changeFlightMode("AUTO");
+				//usleep(2000000);
+				//for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;//Releases all Channels First
+				//rc_override_data.channels[2] = 100; //Ascending Throttle
+				//usleep(2000000);
+							
 				changeFlightMode("LOITER");
-				while (flight_mode != "LOITER" && ros::ok()){
-					ros::spinOnce();
-				}
+				usleep(2000000);
+				
+				system("rosrun mavros mavsafety arm");
+				usleep(2000000);
+				
 				for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;//Releases all Channels First
-				rc_override_data.channels[2] = MIDDLE; //Ascending Throttle
+				rc_override_data.channels[2] = 1500; //Ascending Throttle
 				pub_rc_override.publish(rc_override_data);
 				usleep(10000000);			// take off for 10 seconds
 				changeFlightMode("GUIDED");
-				while (flight_mode != "GUIDED" && ros::ok()){
-					ros::spinOnce();
-				}
+				usleep(2000000);
+				
 			}
 			
 			else {
 				command_detected = -1;
 			}
 			
+			if(command_detected == -3 ){
+				sendReply("sc:drone_movement_is_zero\n");
+			}
 			
-			if(command_detected == -2 ){
+			else if(command_detected == -2 ){
 				sendReply("sc:can't_change_fm\n");
 			}
 			
@@ -172,14 +185,10 @@ void mainMovementController(const std_msgs::String& vData)
 	}
 	
 	else{
-		ROS_INFO_STREAM( "It's not a sc command") ;
+		ROS_WARN_STREAM( "It's not a sc command") ;
 	}	
-	
-	ROS_INFO_STREAM( "Voice Data : " << vData.data) ;
 }
 
-// ################ new mavros msg lib is in mavros_msgs ################ 
-//void rcinReceiver(const mavros::RCIn& rc_in_data);
 void rcinReceiver(const mavros_msgs::RCIn& rc_in_data){
 	
 	rc_in_channel_7 = rc_in_data.channels[6];
@@ -197,8 +206,6 @@ void positionReceiver(const geometry_msgs::PoseStamped& local_recv){
 	pos_z = local_recv.pose.position.z;
 }
 
-// ################ new mavros msg lib is in mavros_msgs ################ 
-// stateReceiver(const mavros::State& state_recv)
 void stateReceiver(const mavros_msgs::State& state_recv){
 	arm_state = state_recv.armed;
 	flight_mode = state_recv.mode;
@@ -219,10 +226,10 @@ void moveDrone(char axis, int location){
 		}
 		
 	else {
-			movement_distance = DISTANCELIMIT+1;			// always never sent to topic if axis input invaalid
+			movement_distance = DISTANCELIMIT+1;			// always never sent to topic if axis input invalid
 		}
 	
-	if (movement_distance < DISTANCELIMIT){
+	if (movement_distance < DISTANCELIMIT && movement_distance != 0){
 		quad_pos.header.stamp = ros::Time::now();
 		quad_pos.header.frame_id = "1";
 		
@@ -243,6 +250,10 @@ void moveDrone(char axis, int location){
 		}
 			 	
 		pub_quad_pos.publish(quad_pos);
+	}
+	
+	else if(movement_distance == 0){
+		command_detected = -3;
 	}
 	
 	else {
