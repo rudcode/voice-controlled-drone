@@ -36,13 +36,13 @@ int main(int argc, char **argv){
      
     socket_desc = socket(AF_INET , SOCK_STREAM , 0);
     if (socket_desc == -1){
-		ROS_ERROR_STREAM("Could not create socket");
+		ROS_ERROR_STREAM("[TB] Could not create socket");
     }
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(port_number);
     if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0){
-		ROS_ERROR_STREAM("bind failed. Error: " << strerror(errno));
+		ROS_ERROR_STREAM("[TB] bind failed. Error: " << strerror(errno));
         return 1;
     }   
     listen(socket_desc , 1);
@@ -55,30 +55,30 @@ int main(int argc, char **argv){
 	// ################# Intializing Socket	#################  
 		 
 	while(ros::ok()){
-		ROS_INFO_STREAM("Waiting for incoming connections...");
+		ROS_INFO_STREAM("[TB] Waiting for incoming connections...");
 		
 		client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
 		if (client_sock < 0){
-			ROS_ERROR_STREAM("accept failed. Error: " << strerror(errno));
+			ROS_ERROR_STREAM("[TB] accept failed. Error: " << strerror(errno));
 			return 1;
 		}
-		ROS_INFO_STREAM("Connection accepted");
+		ROS_INFO_STREAM("[TB] Connection accepted");
 		setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, &tv,sizeof(tv));
     	while(ros::ok()){
-			errno = 0;
+			errno = 0;	// reset errno
 			read_size = recv(client_sock , client_message , 512 , 0);
 			if (errno != EAGAIN){
 				client_message[read_size] = '\0';
-				ROS_INFO_STREAM( "Voice Data : " << client_message);
+				ROS_INFO_STREAM( "[TB] Voice Data : " << client_message);
 				voice_cmd.data = client_message;
 				pub_voice.publish(voice_cmd);			
 				incoming_reply = "NULL";
 				
-				ROS_INFO_STREAM("Waiting reply from art_vrd nodes");
+				ROS_INFO_STREAM("[TB] Waiting reply from art_vrd nodes");
 				while(read_size != -1 && read_size != 0 && incoming_reply == "NULL" && ros::ok()){
 					ros::spinOnce();			
 				}
-				ROS_INFO_STREAM("Reply accepted from art_vrd nodes");
+				ROS_INFO_STREAM("[TB] Reply accepted from art_vrd nodes");
 				
 				message_reply = incoming_reply.c_str();
 				incoming_reply_size = incoming_reply.size();
@@ -94,24 +94,27 @@ int main(int argc, char **argv){
 				}	
 				// ################## VF Command Reply Header Data ########################
 				
-				send(client_sock , message_reply , incoming_reply_size , 0);
+				if( send(client_sock , message_reply , incoming_reply_size , 0) < 0){
+					ROS_ERROR_STREAM("[TB] send failed. Error: " << strerror(errno));
+					break;
+				}
 				
 				if(read_size == 0){
-					ROS_WARN_STREAM("Client disconnected");
+					ROS_WARN_STREAM("[TB] Client disconnected");
 					break;
 				}
 				else if(read_size == -1){
-					ROS_ERROR_STREAM("recv failed. Error: " << strerror(errno));
+					ROS_ERROR_STREAM("[TB] recv failed. Error: " << strerror(errno));
 					break;
 				}
 				else if(incoming_reply == "NULL"){
-					ROS_WARN_STREAM("Client disconnected with NULL message");;
+					ROS_WARN_STREAM("[TB] Client disconnected with NULL message");;
 					break;
 				}
 			}
 			
 			else if (errno == EAGAIN){
-				ROS_ERROR_STREAM("recv timed out. Error: " << strerror(errno));
+				ROS_ERROR_STREAM("[TB] recv timed out. Error: " << strerror(errno));
 				break;
 			}
 			

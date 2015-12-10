@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	ros::Subscriber sub_vd = sys_mon.subscribe("art_vrd/voice_data", 10, vDataMonitor);
 	pub_incoming_reply = sys_mon.advertise<std_msgs::String>("art_vrd/incoming_reply", 100);
 	pub_rc_override	= sys_mon.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1, true);
-	
+	ROS_INFO("Starting System Monitor.");
 	// set initial state for rc override take over.
 	if(rc_in_data_channel[6] < channel_7_mid){
 			rc_failsafe_override_flag = 0;
@@ -91,11 +91,11 @@ void rcinReceiver(const mavros_msgs::RCIn& rc_in_data){
 		for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;
 		pub_rc_override.publish(rc_override_data);
 		rc_failsafe_override_flag = 1;
-		ROS_ERROR_STREAM( "RC is now taking over!") ;
+		ROS_ERROR_STREAM( "[SM] RC is now taking over!") ;
 	}
 	else if (rc_in_data_channel[6] > channel_7_mid && rc_failsafe_override_flag == 1){
 		rc_failsafe_override_flag = 0;
-		ROS_ERROR_STREAM( "Drone is now taking over") ;
+		ROS_ERROR_STREAM( "[SM] Drone is now taking over") ;
 	}
 	
 }
@@ -136,14 +136,23 @@ void batteryReceiver(const mavros_msgs::BatteryStatus& battery_recv){
 }
 void vDataMonitor(const std_msgs::String& vData){
 	std_msgs::String incoming_reply;
-	if ( vData.data[0] == 'd' && vData.data[1] == 's' ){
-		
-		incoming_reply.data = "error";
-		pub_incoming_reply.publish(incoming_reply);
-		ROS_INFO_STREAM( "It's a ds command") ;	
+	if (vData.data[0] == 's' && vData.data[1] == 'c'){
+		ROS_INFO_STREAM( "[SM] It's a sc command") ;	
 	}
+	
+	else if(vData.data[0] == 'd' && vData.data[1] == 's'){
+		ROS_INFO_STREAM( "[SM] It's a ds command") ;	
+	}
+	
+	else if (vData.data[0] == 'v' && vData.data[1] == 'f'){
+		ROS_INFO_STREAM( "[SM] It's a vf command") ;	
+	}
+	
 	else{
-		ROS_WARN_STREAM( "It's not a ds command") ;
+		
+		incoming_reply.data = "gi:error_unkown_command";
+		pub_incoming_reply.publish(incoming_reply);
+		ROS_ERROR_STREAM( "[SM] It's not a ds, sc, or vf command");	
 	}	
 }
 

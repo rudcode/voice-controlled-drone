@@ -44,15 +44,15 @@ int main(int argc, char **argv)
 
 	ros::init(argc, argv, "drone_status");
 	ros::NodeHandle status;
-	ros::Subscriber sub_state = status.subscribe("mavros/state", 100, stateReceiver);
-	ros::Subscriber sub_rel_alt = status.subscribe("/mavros/global_position/rel_alt", 1, altReceiver );
-	ros::Subscriber sub_compass = status.subscribe("/mavros/global_position/compass_hdg", 10, compassReceiver );
-	ros::Subscriber sub_vel = status.subscribe("/mavros/global_position/gp_vel", 10, velocityReceiver );
+	ros::Subscriber sub_state	 	= status.subscribe("mavros/state", 100, stateReceiver);
+	ros::Subscriber sub_rel_alt 	= status.subscribe("/mavros/global_position/rel_alt", 1, altReceiver );
+	ros::Subscriber sub_compass		= status.subscribe("/mavros/global_position/compass_hdg", 10, compassReceiver );
+	ros::Subscriber sub_vel 		= status.subscribe("/mavros/global_position/gp_vel", 10, velocityReceiver );
 	ros::Subscriber sub_temperature = status.subscribe("/mavros/imu/temperature", 10, temperatureReceiver );
-	ros::Subscriber sub_pressure = status.subscribe("/mavros/imu/atm_pressure", 10, pressureReceiver );
-	ros::Subscriber sub_battery = status.subscribe("/mavros/battery", 10, batteryReceiver );
-	ros::Subscriber sub_vd = status.subscribe("art_vrd/voice_data", 10, mainStatus);
-	pub_incoming_reply = status.advertise<std_msgs::String>("art_vrd/incoming_reply", 100);
+	ros::Subscriber sub_pressure 	= status.subscribe("/mavros/imu/atm_pressure", 10, pressureReceiver );
+	ros::Subscriber sub_battery 	= status.subscribe("/mavros/battery", 10, batteryReceiver );
+	ros::Subscriber sub_vd 			= status.subscribe("art_vrd/voice_data", 10, mainStatus);
+	pub_incoming_reply 				= status.advertise<std_msgs::String>("art_vrd/incoming_reply", 100);
 	ros::spin();
   
   return 0;
@@ -117,10 +117,6 @@ void mainStatus(const std_msgs::String& vData){
 		incoming_reply.data = "ds:"+s_arm_state+";"+flight_mode+";"+s_rel_alt+";"+s_compass+";"+s_vel_x+";"+s_vel_y+";"+s_vel_z+";"+s_temperature+";"+s_pressure+";"+s_battery+";\n";
 		//debugging(incoming_reply.data);
 		pub_incoming_reply.publish(incoming_reply);
-		ROS_INFO_STREAM( "It's a ds command") ;	
-	}
-	else{
-		ROS_WARN_STREAM( "It's not a ds command") ;
 	}	
 }
 
