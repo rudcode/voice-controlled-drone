@@ -33,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     static Bitmap bitmapCameraDrone;
     Handler handler;
 
+    static boolean imageReceived = true;
+    static boolean droneStatusReceived = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,16 +74,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (pager.getCurrentItem() == 1) {
-                    if (tcpClient != null) {
-                        tcpClient.sendMessage("vf");
+                    if (imageReceived) {
+                        if (tcpClient != null) {
+                            tcpClient.sendMessage("vf");
+                            imageReceived = false;
+                        }
                     }
-                    handler.postDelayed(this, 35);
+                    handler.postDelayed(this, 33);
                 } else if (pager.getCurrentItem() == 2) {
-                    if (tcpClient != null) {
-                        tcpClient.sendMessage("ds");
+                    if (droneStatusReceived) {
+                        if (tcpClient != null) {
+                            tcpClient.sendMessage("ds");
+                            imageReceived = false;
+                        }
                     }
                     handler.postDelayed(this, 250);
                 } else {
+                    imageReceived = true;
+                    droneStatusReceived = true;
                     handler.postDelayed(this, 500); // set time here to refresh textView
                 }
             }
@@ -120,8 +131,8 @@ public class MainActivity extends AppCompatActivity {
             tcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
 
                 @Override
-                public void messageReceived(byte[] message, byte[] isImage) {
-                    publishProgress(message, isImage);
+                public void messageReceived(byte[] message) {
+                    publishProgress(message);
                 }
             }, Tab1.ipAddressEditText.getText().toString(), Integer.parseInt(Tab1.portAddressEditText.getText().toString()));
             tcpClient.run();
@@ -132,24 +143,24 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(byte[]... values) {
             super.onProgressUpdate(values);
             //receivedTextView.setText(values[0].length + "");
-            if (Objects.equals(new String(values[1]), "I")) {
+            if (values[0].length > 100) {
+                imageReceived = true;
                 bitmapCameraDrone = BitmapFactory.decodeByteArray(values[0], 0, values[0].length);
                 if (bitmapCameraDrone != null) {
                     Tab2.cameraDrone.setImageBitmap(bitmapCameraDrone);
                     bitmapCameraDrone = null;
                 }
             }
-            if (Objects.equals(new String(values[1]), "S") && values[0].length >= 2) {
+            if (values[0].length <= 100) {
                 if ((values[0][0] == (byte) 's' && values[0][1] == (byte) 'c' && values[0][2] == (byte) ':')) {
                     Tab1.receivedTextView.setText(new String(values[0], 3, values[0].length - 3));
                 } else if (values[0][0] == (byte) 'd' && values[0][1] == (byte) 's' && values[0][2] == (byte) ':') {
-                    Log.e("ds", "ds");
+                    droneStatusReceived = true;
                     int j = 3;
                     int k = 0;
 
                     for (int i = 3; i < values[0].length; i++) {
                         if (values[0][i] == (byte) ';') {
-                            Log.e("ds", ";");
                             if (k == 0) {
                                 droneStatus.armMode = (values[0][j] != (byte) '0');
                                 if (droneStatus.armMode) {

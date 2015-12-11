@@ -15,6 +15,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <stdint.h>
 
 using namespace std;
 using namespace cv;
@@ -22,7 +23,7 @@ using namespace cv;
 int main(int argc , char *argv[])
 {
 	// ############ Start OpenCV Variable ############ 
-	int nBytes, x;
+	int32_t nBytes, x;
 	char video_data[100000];
 	vector<uchar> buff;
 	vector<int> param = vector<int>(2);     
@@ -61,6 +62,7 @@ int main(int argc , char *argv[])
 		cout << "Error\n";
 		return -1;
 	}
+
 	// ############  End Video Init ############  
 	// Keep waiting for connection
 	while(1){
@@ -90,18 +92,13 @@ int main(int argc , char *argv[])
 					video_data[x] = buff[x];
 				}
 			
-				char byteBuffer[20];
-				sprintf(byteBuffer, "*AI\n%d\n", nBytes);
-				if(send(client_sock, byteBuffer, sizeof(byteBuffer), 0) < 0) {	// send start flag and size
-					cout << "Send start flag and size failed " << endl;
+				int32_t tmp = htonl(nBytes);
+				if(send(client_sock, &tmp, sizeof(tmp), 0) < 0) {	// send size
+					cout << "Send size failed " << endl;
 					return 1;
 				}			
 				if(send(client_sock, video_data, nBytes, 0) < 0) {		// send encoded image to client
 					cout << "Send image data failed" << endl;
-					return 1;
-				}
-				if(send(client_sock, "\n", 1, 0) < 0) {				// end string
-					cout << "Send end string failed" << endl;
 					return 1;
 				}
 			

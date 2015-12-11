@@ -51,30 +51,38 @@ int main(int argc , char *argv[])
 			printf("%s\n",client_message);
 					
 			//Send the message back to client
-			if(client_message[0] == 's')
-			write(client_sock , "sc:ok\0" , 4);
+			if(client_message[0] == 's') {
+				int32_t tmp = htonl(4);
+				write(client_sock, &tmp, sizeof(tmp));	// send size
+				write(client_sock , "sc:ok\0" , 4);
+			}
+			else if (client_message[0] == 'd' && client_message[1] == 's') {
 			
-			else if (client_message[0] == 'd' && client_message[1] == 's'){
-			
-			for(counter = 2; counter < 10;counter++){
-				artificial_status[counter] = (rand()%1000)*0.327*(0.3+counter);			
-			}		
+				for(counter = 2; counter < 10;counter++){
+					artificial_status[counter] = (rand()%1000)*0.327*(0.3+counter);			
+				}		
 				
-			sprintf(client_message,"ds:1;land;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;\n",
-			artificial_status[2],
-			artificial_status[3],
-			artificial_status[4],
-			artificial_status[5],
-			artificial_status[6],
-			artificial_status[7],
-			artificial_status[8],
-			artificial_status[9]);
-    
-			write(client_sock , client_message , strlen(client_message));
+				sprintf(client_message,"ds:1;land;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;%.2f;\n",
+				artificial_status[2],
+				artificial_status[3],
+				artificial_status[4],
+				artificial_status[5],
+				artificial_status[6],
+				artificial_status[7],
+				artificial_status[8],
+				artificial_status[9]);
+	    
+				int32_t tmp = htonl(strlen(client_message));
+				write(client_sock, &tmp, sizeof(tmp));	// send size
+			
+				write(client_sock , client_message , strlen(client_message));
 			}
 					
-			else
-			write(client_sock , client_message , strlen(client_message));
+			else {
+				int32_t tmp = htonl(strlen(client_message));
+				write(client_sock, &tmp, sizeof(tmp));	// send size
+				write(client_sock , client_message , strlen(client_message));
+			}
 			
 		}
 		 

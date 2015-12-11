@@ -98,36 +98,20 @@ public class TCPClient {
                 //receives the message which the server sends back
                 InputStream mInputStream = socket.getInputStream();
                 DataInputStream mDataInputStream = new DataInputStream(mInputStream);
-                mBufferIn = new BufferedReader(new InputStreamReader(mInputStream));
-                byte[] data;
+
                 int len;
-                byte[] isImage = "I".getBytes();
-                byte[] isString = "S".getBytes();
+                byte[] data;
 
                 while (mRun) {
-                    mServerMessage = mBufferIn.readLine();
-                    //Log.e("Debug1", mServerMessage);
-                    if (Objects.equals(mServerMessage, "*AI")) {
-                        mServerMessage = "";
-                        mServerMessage = mBufferIn.readLine();
-                        len = Integer.parseInt(mServerMessage);
-                        if (len > 0) {
-                            data = new byte[len];
+                    len = mDataInputStream.readInt();
+                    data = new byte[len];
+                    mDataInputStream.readFully(data, 0, len);
 
-                            //Log.e("Debug2", len + "");
-                            mDataInputStream.readFully(data, 0, len);
-
-                            if (mMessageListener != null) {
-                                //call the method messageReceived from MyActivity class
-                                mMessageListener.messageReceived(data, isImage);
-                            }
-                        }
-                    }
-                    else if (mServerMessage != null && mMessageListener != null) {
+                    if (len > 0 && mMessageListener != null) {
                         //call the method messageReceived from MyActivity class
-                        mMessageListener.messageReceived(mServerMessage.getBytes(), isString);
+                        //Log.e("Size", len + "");
+                        mMessageListener.messageReceived(data);
                     }
-
                 }
                 //Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
 
@@ -150,6 +134,6 @@ public class TCPClient {
     //Declare the interface. The method messageReceived(String message) will must be implemented in the MyActivity
     //class at on asynckTask doInBackground
     public interface OnMessageReceived {
-        public void messageReceived(byte[] message, byte[] type);
+        public void messageReceived(byte[] message);
     }
 }

@@ -82,7 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".50"
-            android:text="10.5.76.245" >
+            android:text="192.168.0.15" >
         </EditText>
 
         <EditText

@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Fill in the IP address &amp; Port of the drone you are using"
+                android:text="Fill the IP address &amp; Port of the drone you are using"
                 android:id="@+id/textView14" />
 
             <Space
@@ -59,7 +59,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Click on blue Mic icon to start giving voice command"
+                android:text="Click on Blue Mic icon to start give voice command"
                 android:id="@+id/textView16"
                 android:layout_gravity="center_horizontal" />
 
