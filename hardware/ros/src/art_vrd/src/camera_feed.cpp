@@ -37,7 +37,7 @@ int main(int argc, char **argv){
     cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);		// Set Lebar gambar
 	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 360);		// Set tinggi Gambar
     param[0] = CV_IMWRITE_JPEG_QUALITY;			// set tipe encoding 
-	param[1] = 90;								// set kualitas encoding
+	param[1] = 30;								// set kualitas encoding
 
 	if(!cap.isOpened()){
 		ROS_ERROR_STREAM("[CF] error opening camera") ;
