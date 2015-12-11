@@ -80,13 +80,19 @@ public class MainActivity extends AppCompatActivity {
                             imageReceived = false;
                         }
                     }
+                    if (!droneStatusReceived) {
+                        droneStatusReceived = true;
+                    }
                     handler.postDelayed(this, 33);
                 } else if (pager.getCurrentItem() == 2) {
                     if (droneStatusReceived) {
                         if (tcpClient != null) {
                             tcpClient.sendMessage("ds");
-                            imageReceived = false;
+                            droneStatusReceived = false;
                         }
+                    }
+                    if (!imageReceived) {
+                        imageReceived = true;
                     }
                     handler.postDelayed(this, 250);
                 } else {
