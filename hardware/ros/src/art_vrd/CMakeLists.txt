@@ -134,10 +134,11 @@ include_directories(
 
 ## Declare a C++ executable
 # add_executable(art_vrd_node src/art_vrd_node.cpp)
- add_executable(status src/status.cpp)
+ add_executable(drone_status src/drone_status.cpp)
  add_executable(tcp_bridge src/tcp_bridge.cpp)
  add_executable(camera_feed src/camera_feed.cpp)
  add_executable(movement_controller src/movement_controller.cpp)
+ add_executable(system_monitor src/system_monitor.cpp)
  
 
 ## Add cmake target dependencies of the executable
@@ -150,7 +151,11 @@ include_directories(
 # )
 
  
- target_link_libraries(status
+ target_link_libraries(system_monitor
+   ${catkin_LIBRARIES}
+ )
+ 
+ target_link_libraries(drone_status
    ${catkin_LIBRARIES}
  )
  
@@ -169,8 +174,8 @@ include_directories(
 
 
 ############## Example ################
-# add_executable(subscriber src/example/subscriber.cpp)
-# target_link_libraries(subscriber
+# add_executable(spin_test src/example/spin_test.cpp)
+# target_link_libraries(spin_test
 #   ${catkin_LIBRARIES}
 # )
  
@@ -199,11 +204,10 @@ include_directories(
 # )
 
 ## Mark cpp header files for installation
-# install(DIRECTORY include/${PROJECT_NAME}/
-#   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-#   FILES_MATCHING PATTERN "*.h"
-#   PATTERN ".svn" EXCLUDE
-# )
+install(DIRECTORY include/${PROJECT_NAME}/
+	DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+	PATTERN ".svn" EXCLUDE
+)
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES

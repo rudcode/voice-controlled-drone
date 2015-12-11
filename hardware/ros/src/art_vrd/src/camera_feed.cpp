@@ -17,36 +17,34 @@ using namespace cv;
 void mainCameraFeed(const std_msgs::String& vData);
 ros::Publisher pub_incoming_reply;
 
-// ############ Start OpenCV Variable ############ 
+// ############ OpenCV Variable ############ 
 char video_data[100000];
 vector<uchar> buff;
 vector<int> param = vector<int>(2);      
 Mat image_capture;  
 VideoCapture cap(0);			// Membuka Kamera
-
-
-// ############ End OpenCV Variable ############ 
+// ############ OpenCV Variable ############ 
 
 int main(int argc, char **argv){
-	
-	// ############  Start Video Init ############   
-    cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);		// Set Lebar gambar
-	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 360);		// Set tinggi Gambar
-    param[0] = CV_IMWRITE_JPEG_QUALITY;			// set tipe encoding 
-	param[1] = 90;								// set kualitas encoding
-
-	if(!cap.isOpened()){
-		cout << "Error\n";
-		return -1;
-	}
-	// ############  End Video Init ############  
-	
 	
 	ros::init(argc, argv, "camera_feed");
 	ros::NodeHandle n;
 	ros::Subscriber sub_vd = n.subscribe("art_vrd/voice_data", 10, mainCameraFeed);
 	pub_incoming_reply = n.advertise<std_msgs::String>("art_vrd/incoming_reply", 100);
 	ROS_INFO("Starting Camera Feed.");
+	
+	// ############  Video Init ############   
+    cap.set(CV_CAP_PROP_FRAME_WIDTH, 640);		// Set Lebar gambar
+	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 360);		// Set tinggi Gambar
+    param[0] = CV_IMWRITE_JPEG_QUALITY;			// set tipe encoding 
+	param[1] = 90;								// set kualitas encoding
+
+	if(!cap.isOpened()){
+		ROS_ERROR_STREAM("[CF] error opening camera") ;
+		return -1;
+	}
+	// ############  Video Init ############  
+	
 	ros::spin();
 	return 0;
 }
@@ -68,12 +66,7 @@ void mainCameraFeed(const std_msgs::String& vData){
 		
 		std::string video_string(video_data,buff.size());
 		incoming_reply.data = video_string;
-		pub_incoming_reply.publish(incoming_reply);
-		ROS_INFO_STREAM( "It's a vf command") ;
-				
+		pub_incoming_reply.publish(incoming_reply);			
 	}
-	else{
-		ROS_INFO_STREAM( "It's not a vf command") ;
-	}	
-	ROS_INFO_STREAM( "Voice Data : " << vData.data) ;
+	
 }
