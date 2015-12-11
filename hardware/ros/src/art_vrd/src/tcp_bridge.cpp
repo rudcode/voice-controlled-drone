@@ -83,16 +83,13 @@ int main(int argc, char **argv){
 				message_reply = incoming_reply.c_str();
 				incoming_reply_size = incoming_reply.size();
 				
-				// ################## VF Command Reply Header Data ########################
-				if(client_message[0] == 'v' && client_message[1] == 'f'){
-					
-					char byteBuffer[20];
-					sprintf(byteBuffer, "\n*AI\n%d\n", incoming_reply_size);
-					if(send(client_sock, byteBuffer, sizeof(byteBuffer), 0) < 0) {
-						return 1;
-					}
+				// ################## Command Reply Header Data ########################
+				int32_t byteBuffer = htonl(incoming_reply_size);
+				if(send(client_sock, &byteBuffer, sizeof(byteBuffer), 0) < 0) {
+					ROS_ERROR_STREAM("[TB] send failed. Error: " << strerror(errno));
+					break;
 				}	
-				// ################## VF Command Reply Header Data ########################
+				// ################## Command Reply Header Data ########################
 				
 				if( send(client_sock , message_reply , incoming_reply_size , 0) < 0){
 					ROS_ERROR_STREAM("[TB] send failed. Error: " << strerror(errno));
