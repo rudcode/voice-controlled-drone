@@ -1,5 +1,9 @@
 #include "../include/art_vrd/movement_controller.h"
 
+#define YES 1
+#define NO 0
+#define RC NO
+
 int main(int argc, char **argv)
 {	
 	ros::init(argc, argv, "movement_controller");
@@ -25,6 +29,8 @@ int main(int argc, char **argv)
 	known_command[7] = "mendarat di sini";
 	known_command[8] = "lepas landas";
 	
+	#if RC == NO
+
 	// ############# comment this if you have a rc #############  
 	usleep(2000000);
 	
@@ -37,6 +43,9 @@ int main(int argc, char **argv)
 	pub_rc_override.publish(rc_override_data);
 	
 	// ############# comment this if you have a rc #############  
+
+	#endif
+	
 	
 	ros::spin();
 	return 0;
@@ -243,7 +252,7 @@ void moveDrone(char axis, int location){
 		
 		else if (axis == 'z'){
 			quad_pos.pose.position.x = pos_x;
-			quad_pos.pose.position.y = pos_y;
+			quad_pos.pose.position.y = pos_yherm;
 			quad_pos.pose.position.z = location;
 		}
 		
