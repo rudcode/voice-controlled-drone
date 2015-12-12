@@ -24,7 +24,20 @@ int main(int argc, char **argv)
 	known_command[6] = "pulang ke pangkalan";
 	known_command[7] = "mendarat di sini";
 	known_command[8] = "lepas landas";
-
+	
+	// ############# comment this if you have a rc #############  
+	usleep(2000000);
+	
+	rc_override_data.channels[6] = 1000;
+	pub_rc_override.publish(rc_override_data);
+	
+	usleep(2000000);
+	
+	rc_override_data.channels[6] = 2000;
+	pub_rc_override.publish(rc_override_data);
+	
+	// ############# comment this if you have a rc #############  
+	
 	ros::spin();
 	return 0;
 }
@@ -69,14 +82,14 @@ void mainMovementController(const std_msgs::String& vData)
 				
 				// maju command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
-				moveDrone('y',pos_y-distance_vdata);
+				moveDrone('y',pos_y+distance_vdata);
 			}
 			
 			else if(command_detected == 3 && flight_mode == "GUIDED" && arm_state){
 				
 				// mundur command
 				distance_vdata = strtol (command_search+strlen(known_command[command_detected]),NULL,10);
-				moveDrone('y',pos_y+distance_vdata);
+				moveDrone('y',pos_y-distance_vdata);
 
 			}
 			
@@ -120,38 +133,28 @@ void mainMovementController(const std_msgs::String& vData)
 				}
 			}
 			
-			else if(command_detected == 8 && rel_alt < 1 ){				
+			else if(command_detected == 8 && !arm_state){				
 				
-				// line below this should simulate take off using RC 
-				// or try to use take-off in guided mode (if possible)
-				// try guided -> override to above 0 -> set x,y local position
-				
-				//changeFlightMode("GUIDED");
-				//usleep(2000000);
-				//for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;//Releases all Channels First
-				//rc_override_data.channels[2] = 100; //Ascending Throttle
-				//moveDrone('z',6);
-				//usleep(2000000);
-				
-				//changeFlightMode("AUTO");
-				//usleep(2000000);
-				//for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;//Releases all Channels First
-				//rc_override_data.channels[2] = 100; //Ascending Throttle
-				//usleep(2000000);
-							
-				changeFlightMode("LOITER");
-				usleep(2000000);
+				changeFlightMode("STABILIZE");
+				usleep(3000000);
 				
 				system("rosrun mavros mavsafety arm");
-				usleep(2000000);
+				ROS_INFO_STREAM( "Wait 5 seconds" ) ;
+				usleep(5000000);
 				
-				for(int i=0; i < 8; i++) rc_override_data.channels[i] = 0;//Releases all Channels First
-				rc_override_data.channels[2] = 1500; //Ascending Throttle
+				for(int i=0; i < 8; i++) rc_override_data.channels[i] = 65535;
+				rc_override_data.channels[2] = 1185; 
 				pub_rc_override.publish(rc_override_data);
-				usleep(10000000);			// take off for 10 seconds
+				usleep(5000000);
+				changeFlightMode("AUTO");
+				usleep(13000000);
 				changeFlightMode("GUIDED");
-				usleep(2000000);
 				
+				for(int i=0; i < 8; i++) rc_override_data.channels[i] = 65535;
+				rc_override_data.channels[2] = 0; 
+				pub_rc_override.publish(rc_override_data);
+
+							
 			}
 			
 			else {
@@ -177,16 +180,9 @@ void mainMovementController(const std_msgs::String& vData)
 		
 		else{
 			sendReply("sc:rc_takeover\n");
-			ROS_ERROR_STREAM( "RC Take Over!" ) ;
+			ROS_ERROR_STREAM( "[MC] RC Take Over!" ) ;
 		}
-		
-		ROS_INFO_STREAM( "It's a sc command") ;
-		
 	}
-	
-	else{
-		ROS_WARN_STREAM( "It's not a sc command") ;
-	}	
 }
 
 void rcinReceiver(const mavros_msgs::RCIn& rc_in_data){
@@ -197,13 +193,13 @@ void rcinReceiver(const mavros_msgs::RCIn& rc_in_data){
 void altReceiver(const std_msgs::Float64& alt_msg){
 
 	rel_alt = alt_msg.data;
+	pos_z	= rel_alt;
 }
 
 void positionReceiver(const geometry_msgs::PoseStamped& local_recv){
 	
 	pos_x = local_recv.pose.position.x;
 	pos_y = local_recv.pose.position.y;
-	pos_z = local_recv.pose.position.z;
 }
 
 void stateReceiver(const mavros_msgs::State& state_recv){
@@ -235,13 +231,19 @@ void moveDrone(char axis, int location){
 		
 		if (axis == 'x'){
 			quad_pos.pose.position.x = location;
+			quad_pos.pose.position.y = pos_y;
+			quad_pos.pose.position.z = pos_z;
 		}
 		
 		else if (axis == 'y'){
+			quad_pos.pose.position.x = pos_x;
 			quad_pos.pose.position.y = location;
+			quad_pos.pose.position.z = pos_z;
 		}
 		
 		else if (axis == 'z'){
+			quad_pos.pose.position.x = pos_x;
+			quad_pos.pose.position.y = pos_y;
 			quad_pos.pose.position.z = location;
 		}
 		
@@ -271,14 +273,14 @@ void sendReply(const char* reply_message){
 int changeFlightMode(const char* mode){
 	bool success;
 	flight.request.base_mode = 0;				//Set to 0 to use custom_mode
-	flight.request.custom_mode = mode;		//Set to '' to use base_mode
+	flight.request.custom_mode = mode;			//Set to '' to use base_mode
 	success = client.call(flight);
 	
 	if(success){
-		ROS_INFO_STREAM( "Flight Mode changed to "<< flight.request.custom_mode ) ;
+		ROS_INFO_STREAM( "[MC] Flight Mode changed to "<< flight.request.custom_mode ) ;
 	} 
 	else {
-		ROS_ERROR_STREAM( "Failed to change." ) ;
+		ROS_ERROR_STREAM( "[MC] Failed to change." ) ;
 	}
 	
 	return success;
