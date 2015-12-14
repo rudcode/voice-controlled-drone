@@ -18,6 +18,9 @@ import java.util.Objects;
  *
  * @author Catalin Prata
  *         Date: 2/12/13
+ *
+ * edited by ART team
+ *
  */
 public class TCPClient {
 
@@ -108,12 +111,9 @@ public class TCPClient {
                     mDataInputStream.readFully(data, 0, len);
 
                     if (len > 0 && mMessageListener != null) {
-                        //call the method messageReceived from MyActivity class
-                        //Log.e("Size", len + "");
                         mMessageListener.messageReceived(data);
                     }
                 }
-                //Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
 
             } catch (Exception e) {
                 Log.e("TCP", "S: Error", e);

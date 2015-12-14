@@ -30,6 +30,7 @@ public class Tab3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_3,container,false);
 
+        // Set each layout id in tab drone status to variable
         armMode = (TextView) v.findViewById(R.id.armMode);
         flightMode = (TextView) v.findViewById(R.id.flightMode);
         altitude = (TextView) v.findViewById(R.id.altitude);

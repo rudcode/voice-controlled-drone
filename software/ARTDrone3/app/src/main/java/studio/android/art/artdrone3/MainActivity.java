@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Declaring Your View and Variables
+    // Declaring Global Variables
     Toolbar toolbar;
     public static ViewPager pager;
     ViewPagerAdapter adapter;
@@ -69,11 +69,12 @@ public class MainActivity extends AppCompatActivity {
 
         droneStatus = new ARTDroneStatus();
 
+        // Handler for activity in each tab
         handler = new Handler();
         handler.post(new Runnable() {
             @Override
             public void run() {
-                if (pager.getCurrentItem() == 1) {
+                if (pager.getCurrentItem() == 1) { // in video tab send vf and wait for the feedback
                     if (imageReceived) {
                         if (tcpClient != null) {
                             tcpClient.sendMessage("vf");
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         droneStatusReceived = true;
                     }
                     handler.postDelayed(this, 33);
-                } else if (pager.getCurrentItem() == 2) {
+                } else if (pager.getCurrentItem() == 2) { // in drone status tab send ds and wait for the feedback
                     if (droneStatusReceived) {
                         if (tcpClient != null) {
                             tcpClient.sendMessage("ds");
@@ -98,14 +99,14 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     imageReceived = true;
                     droneStatusReceived = true;
-                    handler.postDelayed(this, 500); // set time here to refresh textView
+                    handler.postDelayed(this, 500);
                 }
             }
         });
     }
 
 
-    public static class ARTDroneStatus {
+    public static class ARTDroneStatus { // Drone status class
         public static boolean armMode;
         public static String flightMode;
         public static float altitude;
@@ -131,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class ConnectTask extends AsyncTask<String, byte[], TCPClient> {
+    public static class ConnectTask extends AsyncTask<String, byte[], TCPClient> { // Connect task class for connecting to TCP socket
         @Override
         protected TCPClient doInBackground(String... message) {
             tcpClient = new TCPClient(new TCPClient.OnMessageReceived() {
@@ -148,8 +149,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(byte[]... values) {
             super.onProgressUpdate(values);
-            //receivedTextView.setText(values[0].length + "");
-            if (values[0].length > 100) {
+            if (values[0].length > 100) { // Feedback for video
                 imageReceived = true;
                 bitmapCameraDrone = BitmapFactory.decodeByteArray(values[0], 0, values[0].length);
                 if (bitmapCameraDrone != null) {
@@ -158,9 +158,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             if (values[0].length <= 100) {
-                if ((values[0][0] == (byte) 's' && values[0][1] == (byte) 'c' && values[0][2] == (byte) ':')) {
+                if ((values[0][0] == (byte) 's' && values[0][1] == (byte) 'c' && values[0][2] == (byte) ':')) { // Feedback for voice command
                     Tab1.receivedTextView.setText(new String(values[0], 3, values[0].length - 3));
-                } else if (values[0][0] == (byte) 'd' && values[0][1] == (byte) 's' && values[0][2] == (byte) ':') {
+                } else if (values[0][0] == (byte) 'd' && values[0][1] == (byte) 's' && values[0][2] == (byte) ':') { // Feedback for drone status
                     droneStatusReceived = true;
                     int j = 3;
                     int k = 0;

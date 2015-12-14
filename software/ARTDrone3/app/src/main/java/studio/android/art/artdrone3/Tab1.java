@@ -42,6 +42,8 @@ public class Tab1 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tab_1,container,false);
+
+        // Set each layout id in tab 1 to variable
         speakButton = (ImageButton) view.findViewById(R.id.speakButton);
         commandTextView = (TextView) view.findViewById(R.id.commandTextView);
         receivedTextView = (TextView) view.findViewById(R.id.receivedTextView);

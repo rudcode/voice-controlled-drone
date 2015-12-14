@@ -35,7 +35,7 @@
             android:id="@+id/commandTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".20"
+            android:layout_weight=".50"
             android:ems="10"
             android:gravity="center|center_horizontal"
             android:layout_gravity="center_vertical">
@@ -44,7 +44,7 @@
             android:id="@+id/receivedTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight=".20"
+            android:layout_weight=".50"
             android:ems="10"
             android:gravity="center|center_horizontal"
             android:layout_gravity="center_vertical">
