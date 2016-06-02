@@ -1,0 +1,99 @@
+f4cfd61 - aldwinakbar, 2 days ago : [modify] add pre-proc option for rc control
+3ac4a52 - aldwinakbar, 2 days ago : [modify] repair moveDrone function, set a fixed take-off configuration using auto, and pre-proc for rc option
+3929e5a - aldwinakbar, 3 days ago : Merge from crcdor
+eb32a03 - crcdor, 3 days ago : fix layout bug
+7d23f31 - aldwinakbar, 3 days ago : [modify] add header data for all message type
+b83a67d - aldwinakbar, 3 days ago : [modify] reduce video quality
+84104d9 - crcdor, 3 days ago : Merge branch 'master' of https://github.com/crcdor/voice-controlled-drone
+1089c35 - crcdor, 3 days ago : fix video feed and drone status
+b5436a8 - aldwinakbar, 4 days ago : [add] merge from meepawn
+7ec697e - aldwinakbar, 4 days ago : [modify] change to a more uniform message
+ea17fcc - aldwinakbar, 5 days ago : [modify] add distance error-handling, 3 different take-off configuration
+8ea6c98 - aldwinakbar, 5 days ago : update
+4259e79 - aldwinakbar, 7 days ago : [modify] change from spinOnce to spin system
+83ec8b4 - aldwinakbar, 8 days ago : [modify] add error-handling, recv timer, perror to ros_error_stream
+250524e - aldwinakbar, 8 days ago : [modify] delete un-necessary comment
+8862d54 - aldwinakbar, 9 days ago : [delete] example launch
+bbb847c - aldwinakbar, 9 days ago : [modify] change printf to ros info message
+3d0fa7b - aldwinakbar, 9 days ago : [modify] delete throttle value
+703420a - aldwinakbar, 9 days ago : [modify] rename status node to drone_status
+7f980ca - aldwinakbar, 9 days ago : [add] new launch file
+d5b2ca1 - aldwinakbar, 10 days ago : [add] system monitor node
+340d469 - aldwinakbar, 10 days ago : [modify] create header for movement_controller node
+bbefb33 - aldwinakbar, 10 days ago : update
+fbacb13 - aldwinakbar, 10 days ago : [test] file test for spinOnce inside callback
+67e6000 - aldwinakbar, 11 days ago : [add] preliminary fail-safe & error-handling
+e8a8d68 - aldwinakbar, 11 days ago : [add] movement_controller header file
+4e18963 - aldwinakbar, 12 days ago : added flightmode changer
+55138f6 - aldwinakbar, 12 days ago : [modification] wrong directory
+e2d9e8e - aldwinakbar, 12 days ago : [test] add to-do list in readme
+f113233 - aldwinakbar, 13 days ago : add intial state for flight_mode
+0eb7680 - aldwinakbar, 13 days ago : added working movement controller
+59c6218 - aldwinakbar, 13 days ago : updates
+1b1f937 - aldwinakbar, 13 days ago : cleanup
+8607bf0 - aldwinakbar, 13 days ago : Merge data from crcdor and meepawn
+f7e5eed - aldwinakbar, 13 days ago : added comments for new mavros message library
+af6427e - aldwinakbar, 13 days ago : add build for movement controller
+f5af9a2 - aldwinakbar, 13 days ago : added test for voice interpreter
+fbc6a41 - crcdor, 13 days ago : dari tomi
+20fddd3 - aldwinakbar, 2 weeks ago : merging flightmode_changer with movement_controller
+2bdb33a - crcdor, 2 weeks ago : Merge branch 'master' of https://github.com/crcdor/voice-controlled-drone
+cdf4420 - crcdor, 2 weeks ago : fix voice command
+9eba210 - aldwinakbar, 2 weeks ago : modified, working ds: reply to android
+059195a - aldwinakbar, 2 weeks ago : clean up
+f573327 - meepawn, 2 weeks ago : Merge remote-tracking branch 'origin/master'
+59f8797 - meepawn, 2 weeks ago : Tab 3 fix
+79b010d - crcdor, 2 weeks ago : fix
+94932ec - crcdor, 2 weeks ago : fix drone status
+6802249 - crcdor, 2 weeks ago : bug fix, add drone status
+3b364dd - meepawn, 2 weeks ago : popup
+5dc2e6f - meepawn, 2 weeks ago : floating button
+93f1f17 - aldwinakbar, 2 weeks ago : Merging commit from crcdor, meedwn
+ba35dcc - aldwinakbar, 2 weeks ago : added status_test for android testing
+da250a1 - aldwinakbar, 2 weeks ago : added header sart protocol
+0c67ae7 - meepawn, 2 weeks ago : small change
+662777d - meepawn, 2 weeks ago : Tab2
+7e81481 - meepawn, 2 weeks ago : tab1 fix
+704ae7a - meepawn, 2 weeks ago : kuku
+bc943ad - meepawn, 2 weeks ago : Fixed Color and Button
+c3e8577 - crcdor, 2 weeks ago : Merge branch 'master' of https://github.com/crcdor/voice-controlled-drone
+86e6e96 - crcdor, 2 weeks ago : fixed video on tab
+81dcbaf - meepawn, 2 weeks ago : ic launcher
+48b4cb9 - meepawn, 2 weeks ago : ART Drone 3
+c92de25 - crcdor, 2 weeks ago : first commit tab
+5149996 - aldwinakbar, 3 weeks ago : nothing change
+59b87a5 - aldwinakbar, 3 weeks ago : added build for status node
+2a265c4 - aldwinakbar, 3 weeks ago : revert to older version without header data for android
+010ccb2 - aldwinakbar, 3 weeks ago : added vf command header data for android
+c5a6f9f - aldwinakbar, 3 weeks ago : added receiveer video for android app
+2aa93a4 - aldwinakbar, 3 weeks ago : added working node, with SART Protocol
+a80beda - aldwinakbar, 3 weeks ago : clean up
+521210b - aldwinakbar, 3 weeks ago : rename str variable to vData
+9206bcd - aldwinakbar, 3 weeks ago : rename str variable to vData
+da30cc0 - aldwinakbar, 3 weeks ago : clean up
+4d3cff0 - aldwinakbar, 3 weeks ago : clean up
+6ae52dc - aldwinakbar, 3 weeks ago : Merge branch 'master' of https://github.com/crcdor/voice-controlled-drone
+66e5b8f - aldwinakbar, 3 weeks ago : clean up
+1f5487e - aldwinakbar, 3 weeks ago : system change : every node interprets the vd
+63f7d0e - aldwinakbar, 3 weeks ago : added working video stream with sart protocol
+25b4723 - aldwinakbar, 3 weeks ago : rename data_tcp_received.cpp to tcp_bridge
+ee6ce65 - aldwinakbar, 3 weeks ago : rename from data_tcp_received.cpp
+b1276ba - crcdor, 3 weeks ago : fix tcp receive
+45c6e0b - crcdor, 3 weeks ago : fix size sc ds
+ba2df70 - crcdor, 3 weeks ago : add sc and ds
+e1692d4 - crcdor, 3 weeks ago : add image flag
+1eefe5c - crcdor, 3 weeks ago : build
+09fe311 - crcdor, 3 weeks ago : start flag to send image
+9d04134 - crcdor, 3 weeks ago : add send command button, google voice recognition, connect and stop tcp
+f63c23a - crcdor, 3 weeks ago : bersih bersih
+1b0b15c - crcdor, 3 weeks ago : fix receive error
+ee28978 - crcdor, 3 weeks ago : new commit without opencv
+6392703 - crcdor, 3 weeks ago : first commit
+8fa53c9 - aldwinakbar, 4 weeks ago : changed to video feedback on reply
+e7a8c37 - aldwinakbar, 4 weeks ago : added working tcp video streamer
+0864a0a - aldwinakbar, 4 weeks ago : non-ros folder clean-up & added video feed
+8d9b682 - aldwinakbar, 4 weeks ago : folder clean-up
+e191ab3 - aldwinakbar, 4 weeks ago : syncing dropbox and github hw files
+d9d5d36 - aldwinakbar, 4 weeks ago : fixing hardware folder error
+5f07ac8 - aldwinakbar, 4 weeks ago : added documentation
+da74186 - aldwinakbar, 7 weeks ago : Intial Commit

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9EDDF"
+    android:weightSum="1">
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.28" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tomi"
+        android:id="@+id/textView27"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold|italic" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="304dp"
+        android:src="@drawable/team"
+        android:id="@+id/imageView3"
+        android:layout_gravity="center"
+        android:layout_weight="0.18" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+    <TextView
+        android:layout_width="144dp"
+        android:layout_height="wrap_content"
+        android:text="Aldwin Akbar"
+        android:id="@+id/textView28"
+        android:gravity="center_horizontal"
+        android:layout_weight="0.09"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rudy Nurhadi"
+        android:id="@+id/textView29"
+        android:layout_weight="0.66"
+        android:gravity="end|center_horizontal"
+        android:textStyle="bold|italic" />
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.20" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Voice Controlled Drone "
+        android:id="@+id/textView30"
+        android:layout_gravity="center_horizontal"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="v1.0"
+        android:id="@+id/textView31"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

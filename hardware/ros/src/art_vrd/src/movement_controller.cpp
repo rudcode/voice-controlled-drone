@@ -252,7 +252,7 @@ void moveDrone(char axis, int location){
 		
 		else if (axis == 'z'){
 			quad_pos.pose.position.x = pos_x;
-			quad_pos.pose.position.y = pos_yherm;
+			quad_pos.pose.position.y = pos_y;
 			quad_pos.pose.position.z = location;
 		}
 		

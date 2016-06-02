@@ -39,9 +39,9 @@ int main(int argc , char *argv[])
     }
     puts("Socket created");
      
-    server.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server.sin_addr.s_addr = inet_addr("192.168.0.101");
     server.sin_family = AF_INET;
-    server.sin_port = htons(50005);
+    server.sin_port = htons(50001);
     // ############  End Create Socket  ############ 
  
  
@@ -78,16 +78,7 @@ int main(int argc , char *argv[])
             break;
         }
         
-        if(server_reply[0] == 'E' &&									// if server_relpy error, don't update opencv frame
-			server_reply[1] == 'R' &&
-			server_reply[2] == 'R' &&
-			server_reply[3] == 'O' &&
-			server_reply[4] == 'R'){
-				
-			puts("Server reply : ERROR");
-		}
-		
-		else{
+        else{
 			cout << read_size << " Bytes Received" << endl;
 				
 			Mat img_buff(Size(640, 360), CV_8U, server_reply);			// deklarasi tempat untuk frame gambar
